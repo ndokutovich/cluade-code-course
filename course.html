@@ -1186,16 +1186,21 @@ flowchart TB
   }
 }</code></pre>
 
+                    <h4>Официальные режимы разрешений</h4>
                     <table>
                         <thead>
-                            <tr><th>Режим</th><th>Разрешённые tools</th><th>Сценарий</th></tr>
+                            <tr><th>Режим</th><th>Описание</th><th>Сценарий</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Read-only</td><td>Read, Glob, Grep</td><td>Code review, аудит</td></tr>
-                            <tr><td>Safe edit</td><td>Read, Glob, Grep, Edit</td><td>Редактирование без shell</td></tr>
-                            <tr><td>Full access</td><td>Все</td><td>Полная разработка</td></tr>
+                            <tr><td><code>default</code></td><td>Спрашивает разрешение при первом использовании</td><td>Стандартная работа</td></tr>
+                            <tr><td><code>acceptEdits</code></td><td>Автоматически принимает редактирование файлов</td><td>Активная разработка</td></tr>
+                            <tr><td><code>plan</code></td><td>Только анализ, без модификации</td><td>Планирование, code review</td></tr>
+                            <tr><td><code>dontAsk</code></td><td>Автоотклонение, если не одобрено заранее</td><td>Строгий контроль</td></tr>
+                            <tr><td><code>bypassPermissions</code></td><td>Пропускает все запросы разрешений</td><td>CI/CD, доверенная среда</td></tr>
                         </tbody>
                     </table>
+                    <pre><code>claude --permission-mode plan              # Через CLI флаг
+claude config set defaultMode acceptEdits  # В настройках</code></pre>
 
                     <div class="practice">
                         <div class="practice-title">Практика</div>
@@ -1216,8 +1221,8 @@ flowchart TB
                             <tr><td>Текст</td><td>Просто печатать</td><td>Исправь баг в функции login</td></tr>
                             <tr><td>Ссылка на файл</td><td><code>@путь/к/файлу</code></td><td><code>@src/auth.ts</code></td></tr>
                             <tr><td>Диапазон строк</td><td><code>@файл:начало-конец</code></td><td><code>@src/auth.ts:50-100</code></td></tr>
-                            <tr><td>Буфер обмена</td><td><code>Ctrl+V</code> / <code>Cmd+V</code></td><td>Вставка кода или изображения</td></tr>
-                            <tr><td>Изображение</td><td>Вставка или drag-and-drop</td><td>Скриншот ошибки</td></tr>
+                            <tr><td>Буфер (текст)</td><td><code>Ctrl+V</code> / <code>Cmd+V</code></td><td>Вставка скопированного кода</td></tr>
+                            <tr><td>Изображение</td><td><code>Alt+V</code> (Win) / <code>Cmd+V</code> (macOS)</td><td>Скриншот ошибки</td></tr>
                             <tr><td>Pipe</td><td><code>cmd | claude</code></td><td><code>git diff | claude "review"</code></td></tr>
                         </tbody>
                     </table>
@@ -1237,19 +1242,10 @@ flowchart TB
 
                     <p class="note"><strong>Важно:</strong> Claude загружает содержимое файлов автоматически по @-ссылкам.</p>
 
-                    <h4>Буфер обмена и изображения</h4>
-                    <p><strong>Вставка текста:</strong> <code>Ctrl+V</code> / <code>Cmd+V</code></p>
-                    <p><strong>Вставка изображений (отдельная команда!):</strong></p>
-                    <table>
-                        <thead>
-                            <tr><th>Платформа</th><th>Команда</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Windows</td><td><code>Alt+V</code></td></tr>
-                            <tr><td>macOS</td><td><code>Cmd+V</code></td></tr>
-                            <tr><td>Linux</td><td><code>Ctrl+V</code> или <code>Alt+V</code></td></tr>
-                        </tbody>
-                    </table>
+                    <h4>Работа с изображениями</h4>
+                    <p>Claude Code — мультимодальный инструмент. Поддерживает PNG, JPEG, GIF, WebP.</p>
+                    <p><strong>Типичные сценарии:</strong> скриншоты ошибок, диаграммы, UI макеты, фото whiteboard.</p>
+                    <p class="note"><strong>Важно:</strong> Для вставки изображений используйте <code>Alt+V</code> (Windows/Linux) или <code>Cmd+V</code> (macOS). Обычный <code>Ctrl+V</code> вставляет только текст.</p>
 
                     <h4>Горячие клавиши CLI</h4>
                     <p><strong>Управление сессией:</strong></p>
