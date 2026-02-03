@@ -2329,11 +2329,32 @@ Claude: [Создаёт branch, применяет fix, пишет тест]</co
             pre.appendChild(btn);
         });
 
-        // Add copy buttons to mermaid diagrams (copy source code)
-        document.querySelectorAll('.mermaid').forEach((el, i) => {
-            const btn = createCopyButton(() => mermaidSources.get(i) || '');
-            el.appendChild(btn);
+        // Add copy buttons to mermaid diagrams after they render
+        // Use MutationObserver to detect when mermaid replaces content with SVG
+        const mermaidObserver = new MutationObserver((mutations, observer) => {
+            document.querySelectorAll('.mermaid').forEach((el, i) => {
+                // Only add button if mermaid has rendered (has SVG) and no button yet
+                if (el.querySelector('svg') && !el.querySelector('.copy-btn')) {
+                    const btn = createCopyButton(() => mermaidSources.get(i) || '');
+                    el.appendChild(btn);
+                }
+            });
         });
+
+        // Observe changes to mermaid containers
+        document.querySelectorAll('.mermaid').forEach(el => {
+            mermaidObserver.observe(el, { childList: true });
+        });
+
+        // Also check immediately in case mermaid already rendered
+        setTimeout(() => {
+            document.querySelectorAll('.mermaid').forEach((el, i) => {
+                if (el.querySelector('svg') && !el.querySelector('.copy-btn')) {
+                    const btn = createCopyButton(() => mermaidSources.get(i) || '');
+                    el.appendChild(btn);
+                }
+            });
+        }, 500);
 
         // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
