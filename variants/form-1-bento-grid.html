@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Bento Grid</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: #18181b;
+            --card-hover: #27272a;
+            --border: #27272a;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --accent: #3b82f6;
+            --accent-2: #8b5cf6;
+            --accent-3: #06b6d4;
+            --gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 1.5rem;
+        }
+
+        .bento-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .bento-card:hover {
+            background: var(--card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Card sizes */
+        .bento-hero {
+            grid-column: span 2;
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .bento-wide {
+            grid-column: span 2;
+        }
+
+        .bento-tall {
+            grid-row: span 2;
+        }
+
+        /* Card content */
+        .phase-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .phase-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-features {
+            list-style: none;
+        }
+
+        .phase-features li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .phase-features li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        .result-box {
+            margin-top: auto;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            font-size: 0.875rem;
+        }
+
+        .result-box strong {
+            color: var(--accent);
+        }
+
+        /* Stats in hero card */
+        .stats-row {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .bento-hero, .bento-wide {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .bento-hero, .bento-wide, .bento-tall {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Методология Кентавр + AI</div>
+            <h1>AI-Driven Development</h1>
+            <p class="subtitle">Проверенная методология, где Claude AI выступает как интеллектуальный партнёр на каждом этапе разработки</p>
+        </header>
+
+        <div class="bento-grid">
+            <!-- Hero Card with Stats -->
+            <div class="bento-card bento-hero">
+                <div class="phase-number">🐴</div>
+                <h2 class="phase-title">Фаза КЕНТАВР: Глубокая Аналитика</h2>
+                <p class="phase-description">
+                    Уникальная практика — человек-аналитик общается с заказчиком, используя AI как мощный инструмент для создания исчерпывающего опросника и структурирования информации
+                </p>
+                <ul class="phase-features">
+                    <li><strong>Исчерпывающий опросник:</strong> детальные вопросы по домену</li>
+                    <li><strong>Vision & Scope:</strong> структурированный документ</li>
+                    <li><strong>UI прототип:</strong> mockups, wireframes, user flow</li>
+                    <li><strong>Утверждение:</strong> согласование концепции с заказчиком</li>
+                </ul>
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="stat-value">55.8%</div>
+                        <div class="stat-label">Ускорение</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">80%</div>
+                        <div class="stat-label">Покрытие тестами</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">6 мес</div>
+                        <div class="stat-label">ROI</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="bento-card">
+                <div class="phase-number">2</div>
+                <h3 class="phase-title">Детализация Требований</h3>
+                <p class="phase-description">AI разбивает Epic на детальные User Stories</p>
+                <ul class="phase-features">
+                    <li>Acceptance Criteria</li>
+                    <li>Test scenarios (Given-When-Then)</li>
+                    <li>Definition of Done</li>
+                </ul>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="bento-card">
+                <div class="phase-number">3</div>
+                <h3 class="phase-title">Feature Branch</h3>
+                <p class="phase-description">Claude Code пишет код и E2E тесты</p>
+                <ul class="phase-features">
+                    <li>Точность 72.7% SWE-bench</li>
+                    <li>Unit tests 80%+ coverage</li>
+                    <li>Playwright E2E</li>
+                </ul>
+            </div>
+
+            <!-- Phase 4 - Wide -->
+            <div class="bento-card bento-wide">
+                <div class="phase-number">4</div>
+                <h3 class="phase-title">Code Review и Merge</h3>
+                <p class="phase-description">Двухуровневый review: AI проверяет технику, человек — архитектуру и бизнес-логику</p>
+                <ul class="phase-features">
+                    <li><strong>AI Pre-Review:</strong> security, code quality, performance</li>
+                    <li><strong>Human Review:</strong> архитектура, бизнес-логика</li>
+                    <li><strong>Merge в main:</strong> после двойного approval</li>
+                </ul>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="bento-card">
+                <div class="phase-number">5</div>
+                <h3 class="phase-title">CI/CD Тестовый Контур</h3>
+                <p class="phase-description">Автоматический pipeline после merge</p>
+                <ul class="phase-features">
+                    <li>Build + Unit tests</li>
+                    <li>E2E regression suite</li>
+                    <li>Видео при падении</li>
+                </ul>
+            </div>
+
+            <!-- Phase 6 -->
+            <div class="bento-card">
+                <div class="phase-number">6</div>
+                <h3 class="phase-title">Production</h3>
+                <p class="phase-description">UAT → Deploy → Мониторинг</p>
+                <ul class="phase-features">
+                    <li>Blue-green deployment</li>
+                    <li>AI Observability</li>
+                    <li>Predictive analysis</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Pyramid</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030712;
+            --text: #f9fafb;
+            --muted: #9ca3af;
+            --layer-1: #7c3aed;
+            --layer-2: #8b5cf6;
+            --layer-3: #a78bfa;
+            --layer-4: #c4b5fd;
+            --accent: #22d3ee;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        .tagline {
+            color: var(--muted);
+            font-size: 1.125rem;
+        }
+
+        /* Result Hero */
+        .result-hero {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(34, 211, 238, 0.2));
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 24px;
+            margin-bottom: 3rem;
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .result-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .result-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .result-metric {
+            text-align: center;
+        }
+
+        .result-metric-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .result-metric-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        /* Pyramid */
+        .pyramid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .pyramid-level {
+            position: relative;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .pyramid-level::before {
+            content: '↓';
+            position: absolute;
+            left: 50%;
+            top: -1.25rem;
+            transform: translateX(-50%);
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .pyramid-level:first-child::before {
+            display: none;
+        }
+
+        .level-1 { background: var(--layer-1); margin: 0 0%; }
+        .level-2 { background: var(--layer-2); margin: 0 5%; }
+        .level-3 { background: var(--layer-3); color: var(--bg); margin: 0 10%; }
+        .level-4 { background: var(--layer-4); color: var(--bg); margin: 0 15%; }
+
+        .level-tag {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.7;
+            flex-shrink: 0;
+            width: 60px;
+        }
+
+        .level-content h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .level-content p {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        /* Foundation */
+        .foundation {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            margin-top: 2rem;
+        }
+
+        .foundation-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .foundation h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .foundation p {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        /* How it works */
+        .how-section {
+            margin-top: 4rem;
+        }
+
+        .how-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .how-card {
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .how-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .how-card h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .how-card p {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        @media (max-width: 640px) {
+            .pyramid-level {
+                margin: 0 !important;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+            .level-tag {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI-Driven <span>Development</span></h1>
+            <p class="tagline">От результата к основе</p>
+        </header>
+
+        <!-- Result Hero -->
+        <div class="result-hero">
+            <div class="result-label">Результат</div>
+            <h2 class="result-title">Production-Ready за недели</h2>
+            <div class="result-metrics">
+                <div class="result-metric">
+                    <div class="result-metric-value">55.8%</div>
+                    <div class="result-metric-label">Ускорение</div>
+                </div>
+                <div class="result-metric">
+                    <div class="result-metric-value">80%</div>
+                    <div class="result-metric-label">Покрытие тестами</div>
+                </div>
+                <div class="result-metric">
+                    <div class="result-metric-value">6 мес</div>
+                    <div class="result-metric-label">ROI</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pyramid -->
+        <div class="pyramid">
+            <div class="pyramid-level level-1">
+                <div class="level-tag">Как</div>
+                <div class="level-content">
+                    <h3>CI/CD + E2E Тесты + AI Monitoring</h3>
+                    <p>Автоматический deploy, Playwright regression, predictive observability</p>
+                </div>
+            </div>
+
+            <div class="pyramid-level level-2">
+                <div class="level-tag">Что</div>
+                <div class="level-content">
+                    <h3>Feature Branches + Dual Review</h3>
+                    <p>Claude Code разработка (72.7% SWE-bench) + AI/Human code review</p>
+                </div>
+            </div>
+
+            <div class="pyramid-level level-3">
+                <div class="level-tag">Откуда</div>
+                <div class="level-content">
+                    <h3>Детальные User Stories</h3>
+                    <p>Acceptance Criteria, Given-When-Then сценарии, Definition of Done</p>
+                </div>
+            </div>
+
+            <div class="pyramid-level level-4">
+                <div class="level-tag">База</div>
+                <div class="level-content">
+                    <h3>Vision & Scope от Кентавр-аналитики</h3>
+                    <p>Человек-аналитик + AI: опросник → документ → прототип → утверждение</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Foundation -->
+        <div class="foundation">
+            <div class="foundation-icon">🐴</div>
+            <h3>Методология Кентавр</h3>
+            <p>Человек общается с заказчиком, AI структурирует и ускоряет</p>
+        </div>
+
+        <!-- How it works -->
+        <div class="how-section">
+            <div class="how-title">Ключевые компоненты</div>
+            <div class="how-grid">
+                <div class="how-card">
+                    <div class="how-card-icon">🤖</div>
+                    <h4>Claude Code</h4>
+                    <p>AI-разработка с 72.7% accuracy</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">🎭</div>
+                    <h4>Playwright</h4>
+                    <p>E2E тест для каждой US</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">👁️</div>
+                    <h4>Dual Review</h4>
+                    <p>AI + Human проверка</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-card-icon">🔄</div>
+                    <h4>Blue-Green</h4>
+                    <p>Zero-downtime deploy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

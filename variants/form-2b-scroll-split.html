@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Split Screen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #f5f5f5;
+            --text-light: #ffffff;
+            --text-dark: #0a0a0a;
+            --accent: #6366f1;
+            --accent-2: #8b5cf6;
+            --muted-light: #a1a1aa;
+            --muted-dark: #52525b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* Split Layout */
+        .split-section {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .split-left {
+            background: var(--bg-dark);
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .split-right {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Alternate */
+        .split-section.alt .split-left {
+            order: 2;
+        }
+
+        .split-section.alt .split-right {
+            order: 1;
+        }
+
+        /* Content */
+        .phase-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 8rem;
+            font-weight: 700;
+            line-height: 1;
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            opacity: 0.1;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .phase-title span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .phase-description {
+            font-size: 1.125rem;
+            color: var(--muted-light);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-content p {
+            font-size: 0.875rem;
+            color: var(--muted-light);
+            margin: 0;
+        }
+
+        /* Right Side - Visual Content */
+        .visual-header {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted-dark);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+
+        /* Process Steps */
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .process-step:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 0.9375rem;
+            color: var(--text-dark);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--bg-dark);
+            border-radius: 16px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .code-comment { color: var(--muted-light); }
+        .code-keyword { color: var(--accent); }
+        .code-string { color: #22c55e; }
+
+        /* Result Box */
+        .result-box {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-left: 4px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            margin-top: 2rem;
+        }
+
+        .result-box strong {
+            color: var(--accent);
+        }
+
+        /* Hero Split */
+        .hero-split .split-left {
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            display: block;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .hero-stat {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .hero-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat-label {
+            font-size: 0.75rem;
+            color: var(--muted-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        /* Hero Right Side */
+        .hero-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .hero-phase-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .hero-phase-preview:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
+        }
+
+        .preview-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .preview-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .preview-content p {
+            font-size: 0.75rem;
+            color: var(--muted-dark);
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .split-section {
+                grid-template-columns: 1fr;
+            }
+            .split-left, .split-right {
+                padding: 3rem 2rem;
+            }
+            .split-section.alt .split-left,
+            .split-section.alt .split-right {
+                order: unset;
+            }
+            .phase-number {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <section class="split-section hero-split">
+        <div class="split-left">
+            <div class="phase-badge">Методология Кентавр + AI</div>
+            <h1 class="hero-title">
+                AI-Driven<br>
+                <span>Development</span>
+            </h1>
+            <p class="phase-description">
+                Проверенная методология, где Claude AI выступает как интеллектуальный партнёр, увеличивающий скорость и качество на каждом этапе разработки
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">55.8%</div>
+                    <div class="hero-stat-label">Ускорение разработки</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">80%</div>
+                    <div class="hero-stat-label">Покрытие тестами</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">2x</div>
+                    <div class="hero-stat-label">Быстрее задачи</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">6 мес</div>
+                    <div class="hero-stat-label">ROI окупаемость</div>
+                </div>
+            </div>
+        </div>
+        <div class="split-right">
+            <div class="visual-header">6 фаз разработки</div>
+            <div class="hero-visual">
+                <div class="hero-phase-preview">
+                    <div class="preview-icon">🐴</div>
+                    <div class="preview-content">
+                        <h4>Кентавр-Аналитика</h4>
+                        <p>Человек + AI создают Vision & Scope</p>
+                    </div>
+                </div>
+                <div class="hero-phase-preview">
+                    <div class="preview-icon">📋</div>
+                    <div class="preview-content">
+                        <h4>Детализация требований</h4>
+                        <p>AI разбивает Epic на User Stories</p>
+                    </div>
+                </div>
+                <div class="hero-phase-preview">
+                    <div class="preview-icon">💻</div>
+                    <div class="preview-content">
+                        <h4>Feature Branch разработка</h4>
+                        <p>Claude Code пишет код и тесты</p>
+                    </div>
+                </div>
+                <div class="hero-phase-preview">
+                    <div class="preview-icon">👁️</div>
+                    <div class="preview-content">
+                        <h4>Code Review & Merge</h4>
+                        <p>AI + Human двойная проверка</p>
+                    </div>
+                </div>
+                <div class="hero-phase-preview">
+                    <div class="preview-icon">🔄</div>
+                    <div class="preview-content">
+                        <h4>CI/CD Pipeline</h4>
+                        <p>Автоматический тестовый контур</p>
+                    </div>
+                </div>
+                <div class="hero-phase-preview">
+                    <div class="preview-icon">🚀</div>
+                    <div class="preview-content">
+                        <h4>Production & Monitoring</h4>
+                        <p>UAT → Deploy → AI Observability</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 1 -->
+    <section class="split-section">
+        <div class="split-left">
+            <span class="phase-number">01</span>
+            <div class="phase-badge">Фаза Кентавр</div>
+            <h2 class="phase-title">Глубокая <span>Аналитика</span></h2>
+            <p class="phase-description">
+                Уникальная практика — человек-аналитик общается с заказчиком, используя AI как мощный инструмент для создания исчерпывающего опросника и структурирования информации
+            </p>
+            <ul class="features-list">
+                <li>
+                    <span class="feature-icon">📝</span>
+                    <div class="feature-content">
+                        <strong>Исчерпывающий опросник</strong>
+                        <p>AI формирует детальные вопросы по домену, выявляя edge cases</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">📋</span>
+                    <div class="feature-content">
+                        <strong>Vision & Scope документ</strong>
+                        <p>Структурированный документ с целями и границами проекта</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🎨</span>
+                    <div class="feature-content">
+                        <strong>UI прототип</strong>
+                        <p>Mockups, wireframes, user flow — визуализация продукта</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    <div class="feature-content">
+                        <strong>Утверждение заказчиком</strong>
+                        <p>Согласование концепции перед началом разработки</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="split-right">
+            <div class="visual-header">Процесс Кентавр-аналитики</div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <span class="step-text">Kickoff meeting с заказчиком</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <span class="step-text">AI генерирует опросник по домену</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <span class="step-text">Аналитик проводит глубинные интервью</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <span class="step-text">AI структурирует ответы в документы</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <span class="step-text">Создание UI прототипа с AI</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">6</div>
+                    <span class="step-text">Финальное утверждение заказчиком</span>
+                </div>
+            </div>
+            <div class="result-box">
+                <strong>Результат:</strong> Vision & Scope + Epic User Stories + UI прототип, утверждённые заказчиком
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2 -->
+    <section class="split-section alt">
+        <div class="split-left">
+            <span class="phase-number">02</span>
+            <div class="phase-badge">Требования</div>
+            <h2 class="phase-title">Детализация <span>требований</span></h2>
+            <p class="phase-description">
+                AI разбивает Epic User Stories на детальные пользовательские истории, готовые к разработке с техническими спецификациями
+            </p>
+            <ul class="features-list">
+                <li>
+                    <span class="feature-icon">📖</span>
+                    <div class="feature-content">
+                        <strong>User Stories с Acceptance Criteria</strong>
+                        <p>Чёткие критерии приёмки и технические детали</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🧪</span>
+                    <div class="feature-content">
+                        <strong>Test Scenarios (Given-When-Then)</strong>
+                        <p>Формализованные сценарии для каждой US</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🎯</span>
+                    <div class="feature-content">
+                        <strong>Definition of Done</strong>
+                        <p>Критерии готовности: код, тесты, документация</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🔗</span>
+                    <div class="feature-content">
+                        <strong>Связь с UI mockups</strong>
+                        <p>Каждая US привязана к конкретным экранам</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="split-right">
+            <div class="visual-header">Пример User Story</div>
+            <div class="code-block">
+<span class="code-comment">## US-123: Авторизация пользователя</span>
+
+<span class="code-keyword">As a</span> пользователь
+<span class="code-keyword">I want</span> войти в систему
+<span class="code-keyword">So that</span> получить доступ к функциям
+
+<span class="code-comment">### Acceptance Criteria</span>
+<span class="code-string">✓</span> Email валидация (RFC 5322)
+<span class="code-string">✓</span> Password минимум 8 символов
+<span class="code-string">✓</span> JWT токен в ответе (exp 24h)
+<span class="code-string">✓</span> Редирект на /dashboard
+
+<span class="code-comment">### Test Scenario</span>
+<span class="code-keyword">Given</span> valid credentials
+<span class="code-keyword">When</span> submit login form
+<span class="code-keyword">Then</span> redirect to dashboard
+            </div>
+            <div class="result-box">
+                <strong>Результат:</strong> Backlog детальных User Stories с техническими спецификациями
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 3 -->
+    <section class="split-section">
+        <div class="split-left">
+            <span class="phase-number">03</span>
+            <div class="phase-badge">Разработка</div>
+            <h2 class="phase-title">Feature <span>Branch</span></h2>
+            <p class="phase-description">
+                Claude Code пишет код, unit тесты и E2E сценарии. Точность 72.7% на SWE-bench Verified — это реальные production задачи
+            </p>
+            <ul class="features-list">
+                <li>
+                    <span class="feature-icon">🌿</span>
+                    <div class="feature-content">
+                        <strong>Изолированный Feature Branch</strong>
+                        <p>git checkout -b feature/US-123 для безопасной разработки</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🤖</span>
+                    <div class="feature-content">
+                        <strong>Claude Code реализация</strong>
+                        <p>AI пишет код по спецификации, следуя best practices</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    <div class="feature-content">
+                        <strong>Unit Tests 80%+ Coverage</strong>
+                        <p>Автоматическая генерация тестов с высоким покрытием</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🎭</span>
+                    <div class="feature-content">
+                        <strong>Playwright E2E</strong>
+                        <p>End-to-end тест для каждой User Story</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="split-right">
+            <div class="visual-header">Метрики разработки</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">72.7%</div>
+                    <div class="stat-label">SWE-bench accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">80%+</div>
+                    <div class="stat-label">Test coverage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2x</div>
+                    <div class="stat-label">Быстрее разработка</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">US с E2E тестами</div>
+                </div>
+            </div>
+            <div class="result-box">
+                <strong>Результат:</strong> Feature branch с кодом + unit tests + E2E тест, готовый к review
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 4 -->
+    <section class="split-section alt">
+        <div class="split-left">
+            <span class="phase-number">04</span>
+            <div class="phase-badge">Review</div>
+            <h2 class="phase-title">Code Review <span>& Merge</span></h2>
+            <p class="phase-description">
+                Двухуровневый review: AI проверяет технические аспекты, человек — архитектурные решения и бизнес-логику
+            </p>
+            <ul class="features-list">
+                <li>
+                    <span class="feature-icon">🤖</span>
+                    <div class="feature-content">
+                        <strong>AI Pre-Review</strong>
+                        <p>Security, code quality, performance проверки</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">👤</span>
+                    <div class="feature-content">
+                        <strong>Human Review</strong>
+                        <p>Архитектура, бизнес-логика, соответствие требованиям</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">📝</span>
+                    <div class="feature-content">
+                        <strong>Pull Request</strong>
+                        <p>Детальное описание, ссылка на User Story</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    <div class="feature-content">
+                        <strong>Merge в main</strong>
+                        <p>Только после двойного approval</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="split-right">
+            <div class="visual-header">Review Pipeline</div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">🤖</div>
+                    <span class="step-text">AI: Security scan (SAST/DAST)</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">🤖</div>
+                    <span class="step-text">AI: Code quality & complexity</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">🤖</div>
+                    <span class="step-text">AI: Performance checks</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">👤</div>
+                    <span class="step-text">Human: Architecture review</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">👤</div>
+                    <span class="step-text">Human: Business logic validation</span>
+                </div>
+            </div>
+            <div class="result-box">
+                <strong>Результат:</strong> Код прошёл двойную проверку и смержен в main
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 5 -->
+    <section class="split-section">
+        <div class="split-left">
+            <span class="phase-number">05</span>
+            <div class="phase-badge">CI/CD</div>
+            <h2 class="phase-title">Тестовый <span>Контур</span></h2>
+            <p class="phase-description">
+                После merge автоматически запускается CI/CD pipeline с полным набором проверок и regression testing
+            </p>
+            <ul class="features-list">
+                <li>
+                    <span class="feature-icon">🚀</span>
+                    <div class="feature-content">
+                        <strong>Auto Deploy</strong>
+                        <p>На test environment сразу после merge</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🔨</span>
+                    <div class="feature-content">
+                        <strong>Build + Unit Tests</strong>
+                        <p>Полный build и все unit тесты</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🎭</span>
+                    <div class="feature-content">
+                        <strong>E2E Regression Suite</strong>
+                        <p>Новый тест + все существующие тесты</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">📹</span>
+                    <div class="feature-content">
+                        <strong>Артефакты при падении</strong>
+                        <p>Видео + скриншоты для анализа</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="split-right">
+            <div class="visual-header">Pipeline Status</div>
+            <div class="process-steps" style="gap: 0.75rem;">
+                <div class="process-step" style="background: #dcfce7;">
+                    <div class="step-number" style="background: #22c55e;">✓</div>
+                    <span class="step-text">Build — 45s</span>
+                </div>
+                <div class="process-step" style="background: #dcfce7;">
+                    <div class="step-number" style="background: #22c55e;">✓</div>
+                    <span class="step-text">Unit Tests (247) — 1m 23s</span>
+                </div>
+                <div class="process-step" style="background: #dcfce7;">
+                    <div class="step-number" style="background: #22c55e;">✓</div>
+                    <span class="step-text">Lint + Type Check — 32s</span>
+                </div>
+                <div class="process-step" style="background: #dcfce7;">
+                    <div class="step-number" style="background: #22c55e;">✓</div>
+                    <span class="step-text">E2E Tests (58) — 4m 12s</span>
+                </div>
+                <div class="process-step" style="background: #dcfce7;">
+                    <div class="step-number" style="background: #22c55e;">✓</div>
+                    <span class="step-text">Deploy to Test — 2m 05s</span>
+                </div>
+            </div>
+            <div class="result-box">
+                <strong>Результат:</strong> Новое работает и не сломало старое
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 6 -->
+    <section class="split-section alt">
+        <div class="split-left">
+            <span class="phase-number">06</span>
+            <div class="phase-badge">Production</div>
+            <h2 class="phase-title">Deploy & <span>Monitoring</span></h2>
+            <p class="phase-description">
+                UAT с заказчиком на staging, затем production deployment с проактивным AI-мониторингом
+            </p>
+            <ul class="features-list">
+                <li>
+                    <span class="feature-icon">🧪</span>
+                    <div class="feature-content">
+                        <strong>UAT на Staging</strong>
+                        <p>Заказчик тестирует функциональность</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🔄</span>
+                    <div class="feature-content">
+                        <strong>Blue-Green Deployment</strong>
+                        <p>Zero-downtime с мгновенным rollback</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">📊</span>
+                    <div class="feature-content">
+                        <strong>AI Observability</strong>
+                        <p>E2E мониторинг performance и errors</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="feature-icon">🔮</span>
+                    <div class="feature-content">
+                        <strong>Predictive Analysis</strong>
+                        <p>AI предсказывает потенциальные сбои</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="split-right">
+            <div class="visual-header">Production Metrics</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">Uptime SLA</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">&lt;200ms</div>
+                    <div class="stat-label">Response time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Downtime deploys</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">&lt;5min</div>
+                    <div class="stat-label">Rollback time</div>
+                </div>
+            </div>
+            <div class="result-box">
+                <strong>Результат:</strong> Стабильный production с проактивным мониторингом
+            </div>
+        </div>
+    </section>
+</body>
+</html>

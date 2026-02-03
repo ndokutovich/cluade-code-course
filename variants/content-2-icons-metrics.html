@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Icons & Metrics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafafa;
+            --text: #18181b;
+            --muted: #71717a;
+            --accent: #6366f1;
+            --success: #22c55e;
+            --card: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        .tagline {
+            color: var(--muted);
+            font-size: 1.125rem;
+        }
+
+        /* Flow */
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        .phase-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            width: 160px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+        }
+
+        .phase-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-name {
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .phase-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .metric {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 0.375rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .metric.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        /* Arrow */
+        .arrow {
+            font-size: 1.5rem;
+            color: var(--muted);
+        }
+
+        /* Summary Stats */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .summary-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        /* Legend */
+        .legend {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .legend h3 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 10px;
+        }
+
+        .legend-icon {
+            font-size: 1.25rem;
+        }
+
+        .legend-text {
+            font-size: 0.875rem;
+        }
+
+        .legend-text strong {
+            display: block;
+            font-weight: 600;
+        }
+
+        .legend-text span {
+            color: var(--muted);
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 1024px) {
+            .flow {
+                flex-direction: column;
+            }
+            .arrow {
+                transform: rotate(90deg);
+            }
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI-Driven <span>Development</span></h1>
+            <p class="tagline">6 фаз от идеи до production</p>
+        </header>
+
+        <!-- Summary Stats -->
+        <div class="summary">
+            <div class="summary-card">
+                <div class="summary-value">55.8%</div>
+                <div class="summary-label">Ускорение</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">80%</div>
+                <div class="summary-label">Покрытие тестами</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">72.7%</div>
+                <div class="summary-label">SWE-bench</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">2x</div>
+                <div class="summary-label">Быстрее</div>
+            </div>
+        </div>
+
+        <!-- Flow -->
+        <div class="flow">
+            <div class="phase-card">
+                <div class="phase-icon">🐴</div>
+                <div class="phase-name">Кентавр</div>
+                <div class="phase-metrics">
+                    <span class="metric">Vision & Scope</span>
+                    <span class="metric">UI прототип</span>
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="phase-card">
+                <div class="phase-icon">📋</div>
+                <div class="phase-name">Требования</div>
+                <div class="phase-metrics">
+                    <span class="metric">User Stories</span>
+                    <span class="metric">Test scenarios</span>
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="phase-card">
+                <div class="phase-icon">💻</div>
+                <div class="phase-name">Разработка</div>
+                <div class="phase-metrics">
+                    <span class="metric success">80%+ coverage</span>
+                    <span class="metric">E2E тесты</span>
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="phase-card">
+                <div class="phase-icon">👁️</div>
+                <div class="phase-name">Review</div>
+                <div class="phase-metrics">
+                    <span class="metric">AI + Human</span>
+                    <span class="metric success">Dual approval</span>
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="phase-card">
+                <div class="phase-icon">🔄</div>
+                <div class="phase-name">CI/CD</div>
+                <div class="phase-metrics">
+                    <span class="metric">Auto deploy</span>
+                    <span class="metric success">Regression</span>
+                </div>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="phase-card">
+                <div class="phase-icon">🚀</div>
+                <div class="phase-name">Production</div>
+                <div class="phase-metrics">
+                    <span class="metric success">Blue-green</span>
+                    <span class="metric">AI monitoring</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <h3>Ключевые элементы</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <span class="legend-icon">🐴</span>
+                    <div class="legend-text">
+                        <strong>Кентавр</strong>
+                        <span>Человек + AI аналитика</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">🤖</span>
+                    <div class="legend-text">
+                        <strong>Claude Code</strong>
+                        <span>AI-разработка 72.7% accuracy</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">🎭</span>
+                    <div class="legend-text">
+                        <strong>Playwright</strong>
+                        <span>E2E тесты для каждой US</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">👁️</span>
+                    <div class="legend-text">
+                        <strong>Dual Review</strong>
+                        <span>AI + Human проверка</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">📊</span>
+                    <div class="legend-text">
+                        <strong>AI Observability</strong>
+                        <span>Predictive мониторинг</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon">🔄</span>
+                    <div class="legend-text">
+                        <strong>Blue-Green</strong>
+                        <span>Zero-downtime deploy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

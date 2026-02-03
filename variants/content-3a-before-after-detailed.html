@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Before/After Detailed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --red: #ef4444;
+            --red-bg: rgba(239, 68, 68, 0.1);
+            --green: #22c55e;
+            --green-bg: rgba(34, 197, 94, 0.1);
+            --accent: #3b82f6;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        h1 .before { color: var(--red); }
+        h1 .after { color: var(--green); }
+
+        .tagline {
+            color: var(--muted);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        /* Comparison Sections */
+        .comparison-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+
+        /* Before/After Cards */
+        .comparison-card {
+            padding: 2rem;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .before-card {
+            background: var(--red-bg);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .after-card {
+            background: var(--green-bg);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .before-card .card-icon {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .after-card .card-icon {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .before-card .card-title { color: var(--red); }
+        .after-card .card-title { color: var(--green); }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .card-content {
+            list-style: none;
+        }
+
+        .card-content li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.9375rem;
+        }
+
+        .card-content li:last-child {
+            border-bottom: none;
+        }
+
+        .card-content li::before {
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+        .before-card .card-content li::before {
+            content: '✗';
+            color: var(--red);
+        }
+
+        .after-card .card-content li::before {
+            content: '✓';
+            color: var(--green);
+        }
+
+        .metric-highlight {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .before-card .metric-highlight {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+
+        .after-card .metric-highlight {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--green);
+        }
+
+        /* Arrow Divider */
+        .arrow-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Bottom CTA */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 3rem;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            border-radius: 24px;
+            margin-top: 2rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            .arrow-divider {
+                padding: 1rem 0;
+            }
+            .arrow-circle {
+                transform: rotate(90deg);
+            }
+            .stats-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Трансформация разработки</div>
+            <h1><span class="before">Традиционно</span> → <span class="after">AI-Driven</span></h1>
+            <p class="tagline">Сравните подходы и результаты методологии Кентавр + Claude AI</p>
+        </header>
+
+        <!-- Stats Summary -->
+        <div class="stats-summary">
+            <div class="stat-card">
+                <div class="stat-value">+55.8%</div>
+                <div class="stat-label">Ускорение разработки</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">80%</div>
+                <div class="stat-label">Покрытие тестами</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2x</div>
+                <div class="stat-label">Быстрее задачи</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">6 мес</div>
+                <div class="stat-label">ROI окупаемость</div>
+            </div>
+        </div>
+
+        <!-- Comparison 1: Аналитика -->
+        <div class="comparison-section">
+            <div class="section-title">Фаза аналитики и требований</div>
+            <div class="comparison-grid">
+                <div class="comparison-card before-card">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <div>
+                            <div class="card-title">Традиционный подход</div>
+                            <div class="card-subtitle">Ручная аналитика</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>Разрозненные заметки и переписка с заказчиком</li>
+                        <li>Неполные требования, выявление проблем на этапе разработки</li>
+                        <li>Документация создаётся вручную <span class="metric-highlight">2-3 недели</span></li>
+                        <li>Прототипы требуют отдельного дизайнера</li>
+                        <li>Частые итерации из-за недопонимания</li>
+                    </ul>
+                </div>
+                <div class="arrow-divider">
+                    <div class="arrow-circle">→</div>
+                </div>
+                <div class="comparison-card after-card">
+                    <div class="card-header">
+                        <div class="card-icon">🐴</div>
+                        <div>
+                            <div class="card-title">Кентавр-аналитика</div>
+                            <div class="card-subtitle">Человек + AI</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>Исчерпывающий опросник от AI по всем аспектам домена</li>
+                        <li>100% покрытие требований, edge cases выявлены заранее</li>
+                        <li>Vision & Scope документ за <span class="metric-highlight">3-5 дней</span></li>
+                        <li>UI прототипы генерируются AI (mockups, wireframes)</li>
+                        <li>Утверждение заказчиком до начала разработки</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison 2: Разработка -->
+        <div class="comparison-section">
+            <div class="section-title">Разработка и тестирование</div>
+            <div class="comparison-grid">
+                <div class="comparison-card before-card">
+                    <div class="card-header">
+                        <div class="card-icon">💻</div>
+                        <div>
+                            <div class="card-title">Ручная разработка</div>
+                            <div class="card-subtitle">Классический цикл</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>Разработчик пишет весь код вручную</li>
+                        <li>Тесты пишутся по остаточному принципу <span class="metric-highlight">30-40% coverage</span></li>
+                        <li>E2E тесты — отдельная задача QA команды</li>
+                        <li>80% покрытие тестами занимает <span class="metric-highlight">6+ часов</span></li>
+                        <li>Код ревью только человеком</li>
+                    </ul>
+                </div>
+                <div class="arrow-divider">
+                    <div class="arrow-circle">→</div>
+                </div>
+                <div class="comparison-card after-card">
+                    <div class="card-header">
+                        <div class="card-icon">🤖</div>
+                        <div>
+                            <div class="card-title">Claude Code разработка</div>
+                            <div class="card-subtitle">72.7% SWE-bench accuracy</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>AI пишет код по детальным спецификациям</li>
+                        <li>Unit тесты генерируются автоматически <span class="metric-highlight">80%+ coverage</span></li>
+                        <li>Playwright E2E для каждой User Story сразу</li>
+                        <li>80% покрытие тестами за <span class="metric-highlight">2 часа</span></li>
+                        <li>Двухуровневый review: AI + Human</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison 3: CI/CD и Deploy -->
+        <div class="comparison-section">
+            <div class="section-title">CI/CD и Production</div>
+            <div class="comparison-grid">
+                <div class="comparison-card before-card">
+                    <div class="card-header">
+                        <div class="card-icon">🔧</div>
+                        <div>
+                            <div class="card-title">Ручной деплой</div>
+                            <div class="card-subtitle">Риск человеческих ошибок</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>Ручные шаги деплоя, чеклисты</li>
+                        <li>Регрессия обнаруживается после релиза</li>
+                        <li>Downtime при обновлениях</li>
+                        <li>Реактивный мониторинг — узнаём о проблемах от пользователей</li>
+                        <li>Rollback — стрессовая ситуация</li>
+                    </ul>
+                </div>
+                <div class="arrow-divider">
+                    <div class="arrow-circle">→</div>
+                </div>
+                <div class="comparison-card after-card">
+                    <div class="card-header">
+                        <div class="card-icon">🚀</div>
+                        <div>
+                            <div class="card-title">CI/CD автоматизация</div>
+                            <div class="card-subtitle">Blue-green deployment</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>Полностью автоматический pipeline после merge</li>
+                        <li>E2E regression suite на каждый commit</li>
+                        <li>Zero-downtime deployment</li>
+                        <li>AI Observability — predictive мониторинг <span class="metric-highlight">99.9% uptime</span></li>
+                        <li>Мгновенный rollback за <span class="metric-highlight">&lt;5 минут</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison 4: Бизнес-результаты -->
+        <div class="comparison-section">
+            <div class="section-title">Бизнес-результаты</div>
+            <div class="comparison-grid">
+                <div class="comparison-card before-card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <div>
+                            <div class="card-title">Традиционные метрики</div>
+                            <div class="card-subtitle">Стандартная скорость</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>Базовая скорость разработки</li>
+                        <li>Частые баги в production</li>
+                        <li>Долгий time-to-market</li>
+                        <li>Высокие затраты на QA</li>
+                        <li>Непредсказуемые сроки</li>
+                    </ul>
+                </div>
+                <div class="arrow-divider">
+                    <div class="arrow-circle">→</div>
+                </div>
+                <div class="comparison-card after-card">
+                    <div class="card-header">
+                        <div class="card-icon">📈</div>
+                        <div>
+                            <div class="card-title">AI-Driven метрики</div>
+                            <div class="card-subtitle">Измеримое ускорение</div>
+                        </div>
+                    </div>
+                    <ul class="card-content">
+                        <li>Разработка <span class="metric-highlight">на 55.8% быстрее</span></li>
+                        <li>Минимум багов благодаря E2E тестам</li>
+                        <li>Быстрый выход на рынок</li>
+                        <li>Автоматизированное тестирование</li>
+                        <li>ROI окупаемость за <span class="metric-highlight">6 месяцев</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>Готовы к трансформации?</h2>
+            <p>Внедрите AI-Driven Development и получите измеримые результаты уже в первом проекте</p>
+            <a href="#" class="cta-button">Получить консультацию</a>
+        </div>
+    </div>
+</body>
+</html>

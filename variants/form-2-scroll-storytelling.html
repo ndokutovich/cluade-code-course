@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Scroll Story</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --text: #ffffff;
+            --muted: #888;
+            --accent: #00ff88;
+            --accent-2: #00d4ff;
+            --purple: #a855f7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--purple));
+            z-index: 1000;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        /* Phase Navigation */
+        .phase-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .phase-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .phase-dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .phase-dot:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        /* Full Screen Sections */
+        .phase-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .phase-section:nth-child(odd)::before {
+            background: radial-gradient(circle at 20% 50%, var(--accent) 0%, transparent 50%);
+        }
+
+        .phase-section:nth-child(even)::before {
+            background: radial-gradient(circle at 80% 50%, var(--purple) 0%, transparent 50%);
+        }
+
+        /* Content */
+        .phase-content {
+            max-width: 900px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .phase-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .phase-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 8rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
+            position: absolute;
+            top: 2rem;
+            left: 4rem;
+        }
+
+        .phase-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .phase-title span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .phase-description {
+            font-size: 1.25rem;
+            color: var(--muted);
+            margin-bottom: 3rem;
+            max-width: 700px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--accent);
+            transform: translateX(8px);
+        }
+
+        .feature-item strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-item p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .result-card {
+            margin-top: 2rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1));
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+        }
+
+        .result-card strong {
+            color: var(--accent);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+        }
+
+        .hero-section .phase-content {
+            max-width: 1000px;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            display: block;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        .hero-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-hint::after {
+            content: '↓';
+            font-size: 1.5rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .phase-section { padding: 2rem; }
+            .phase-number { font-size: 4rem; top: 1rem; left: 1rem; }
+            .phase-nav { display: none; }
+            .hero-stats { flex-direction: column; gap: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <nav class="phase-nav">
+        <div class="phase-dot active" data-section="0"></div>
+        <div class="phase-dot" data-section="1"></div>
+        <div class="phase-dot" data-section="2"></div>
+        <div class="phase-dot" data-section="3"></div>
+        <div class="phase-dot" data-section="4"></div>
+        <div class="phase-dot" data-section="5"></div>
+        <div class="phase-dot" data-section="6"></div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="phase-section hero-section">
+        <div class="phase-content visible">
+            <h1 class="hero-title">
+                AI-Driven<br>
+                <span>Development</span>
+            </h1>
+            <p class="phase-description" style="margin: 0 auto 2rem; text-align: center;">
+                Проверенная методология, где Claude AI выступает как интеллектуальный партнёр, увеличивающий скорость и качество на каждом этапе разработки
+            </p>
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-value">55.8%</div>
+                    <div class="hero-stat-label">Ускорение</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">80%</div>
+                    <div class="hero-stat-label">Покрытие тестами</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">6 мес</div>
+                    <div class="hero-stat-label">ROI</div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- Phase 1 -->
+    <section class="phase-section">
+        <span class="phase-number">01</span>
+        <div class="phase-content">
+            <h2 class="phase-title">Фаза <span>КЕНТАВР</span><br>Глубокая Аналитика</h2>
+            <p class="phase-description">
+                Уникальная практика — человек-аналитик общается с заказчиком, используя AI как мощный инструмент для создания исчерпывающего опросника
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <strong>Исчерпывающий опросник</strong>
+                    <p>Аналитик с AI формирует детальные вопросы по домену, выявляя edge cases</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Vision & Scope</strong>
+                    <p>AI помогает обработать ответы и создать структурированный документ</p>
+                </div>
+                <div class="feature-item">
+                    <strong>UI прототип</strong>
+                    <p>Генерация mockups, wireframes, user flow</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Утверждение</strong>
+                    <p>Аналитик согласовывает всю концепцию с заказчиком</p>
+                </div>
+            </div>
+            <div class="result-card">
+                <strong>Результат:</strong> Vision & Scope + Epic User Stories + UI прототип, утверждённые заказчиком
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2 -->
+    <section class="phase-section">
+        <span class="phase-number">02</span>
+        <div class="phase-content">
+            <h2 class="phase-title">Детализация<br><span>Требований</span></h2>
+            <p class="phase-description">
+                AI разбивает Epic User Stories на детальные пользовательские истории, готовые к разработке
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <strong>User Stories</strong>
+                    <p>Разбивка Epics на истории с Acceptance Criteria</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Test Scenarios</strong>
+                    <p>Given-When-Then сценарии для каждой US</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Definition of Done</strong>
+                    <p>Чёткие критерии готовности</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Связь с UI</strong>
+                    <p>Каждая US привязана к mockups из прототипа</p>
+                </div>
+            </div>
+            <div class="result-card">
+                <strong>Результат:</strong> Backlog детальных User Stories с техническими спецификациями
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 3 -->
+    <section class="phase-section">
+        <span class="phase-number">03</span>
+        <div class="phase-content">
+            <h2 class="phase-title">Разработка в<br><span>Feature Branch</span></h2>
+            <p class="phase-description">
+                Claude Code пишет код, тесты и E2E сценарии. Точность 72.7% на SWE-bench Verified
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <strong>Feature branch</strong>
+                    <p>git checkout -b feature/US-123 для изоляции</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Claude Code</strong>
+                    <p>Код согласно Detailed US, best practices, code review</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Unit tests</strong>
+                    <p>80%+ coverage, локальный запуск перед commit</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Playwright E2E</strong>
+                    <p>Каждая US имеет свой E2E тест</p>
+                </div>
+            </div>
+            <div class="result-card">
+                <strong>Результат:</strong> Feature branch с реализацией + unit tests + E2E тест
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 4 -->
+    <section class="phase-section">
+        <span class="phase-number">04</span>
+        <div class="phase-content">
+            <h2 class="phase-title">Code Review<br><span>и Merge</span></h2>
+            <p class="phase-description">
+                Двухуровневый review: AI проверяет технику, человек — архитектуру и бизнес-логику
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <strong>AI Pre-Review</strong>
+                    <p>Автоматическая проверка security, quality, performance</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Human Review</strong>
+                    <p>Архитектурные решения, соответствие требованиям</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Pull Request</strong>
+                    <p>Детальное описание, ссылка на User Story</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Merge в main</strong>
+                    <p>После двойного approval</p>
+                </div>
+            </div>
+            <div class="result-card">
+                <strong>Результат:</strong> Код прошёл двойную проверку и смержен в main
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 5 -->
+    <section class="phase-section">
+        <span class="phase-number">05</span>
+        <div class="phase-content">
+            <h2 class="phase-title">CI/CD<br><span>Тестовый Контур</span></h2>
+            <p class="phase-description">
+                После merge автоматически запускается pipeline с полным набором проверок
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <strong>Auto Deploy</strong>
+                    <p>На test environment сразу после merge</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Build + Tests</strong>
+                    <p>Все unit тесты для проверки регрессий</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Playwright E2E</strong>
+                    <p>Новый тест + regression suite</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Артефакты</strong>
+                    <p>Видео + скриншоты при падении</p>
+                </div>
+            </div>
+            <div class="result-card">
+                <strong>Результат:</strong> Уверенность что новое работает и не сломало старое
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 6 -->
+    <section class="phase-section">
+        <span class="phase-number">06</span>
+        <div class="phase-content">
+            <h2 class="phase-title">Production<br><span>и Мониторинг</span></h2>
+            <p class="phase-description">
+                UAT на staging, затем production deployment с проактивным мониторингом
+            </p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <strong>UAT / Staging</strong>
+                    <p>Заказчик тестирует функциональность</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Production</strong>
+                    <p>Blue-green или canary deployment</p>
+                </div>
+                <div class="feature-item">
+                    <strong>AI Observability</strong>
+                    <p>E2E мониторинг performance, errors</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Predictive Analysis</strong>
+                    <p>AI предсказывает потенциальные сбои</p>
+                </div>
+            </div>
+            <div class="result-card">
+                <strong>Результат:</strong> Стабильный production с проактивным мониторингом
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height);
+            document.getElementById('progressBar').style.transform = `scaleX(${scrolled})`;
+        });
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelector('.phase-content')?.classList.add('visible');
+
+                    // Update nav dots
+                    const sections = document.querySelectorAll('.phase-section');
+                    const index = Array.from(sections).indexOf(entry.target);
+                    document.querySelectorAll('.phase-dot').forEach((dot, i) => {
+                        dot.classList.toggle('active', i === index);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.phase-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Nav dot clicks
+        document.querySelectorAll('.phase-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = dot.dataset.section;
+                document.querySelectorAll('.phase-section')[index].scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

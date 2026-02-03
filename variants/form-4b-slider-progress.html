@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Slider with Progress</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c0a09;
+            --card: #1c1917;
+            --text: #fafaf9;
+            --muted: #a8a29e;
+            --accent: #f97316;
+            --accent-2: #fb923c;
+            --border: #292524;
+            --success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { height: 100%; overflow: hidden; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* Progress Timeline Header */
+        .timeline-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            background: linear-gradient(180deg, var(--bg) 70%, transparent 100%);
+            z-index: 100;
+        }
+
+        .timeline-bar {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .timeline-step::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: -1;
+        }
+
+        .timeline-step:last-child::after {
+            display: none;
+        }
+
+        .timeline-step.completed::after {
+            background: var(--accent);
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .timeline-step.active .step-circle {
+            background: var(--accent);
+            color: var(--bg);
+            box-shadow: 0 0 20px var(--accent);
+            transform: scale(1.2);
+        }
+
+        .timeline-step.completed .step-circle {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            text-align: center;
+            transition: color 0.3s;
+        }
+
+        .timeline-step.active .step-label {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Slider */
+        .slider-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            padding-top: 100px;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: calc(100vh - 100px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 4rem;
+        }
+
+        .slide-content {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* Phase Header */
+        .phase-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .phase-number {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .phase-info {
+            flex: 1;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .phase-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .phase-description {
+            font-size: 1.125rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Features */
+        .features-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .card-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: rgba(249, 115, 22, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+        }
+
+        .feature-text strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-text p {
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* Metrics & Result */
+        .side-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .metrics-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .metric-label {
+            font-size: 0.625rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(251, 146, 60, 0.15));
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .result-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        /* Progress Summary */
+        .progress-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-top: auto;
+        }
+
+        .progress-item {
+            text-align: center;
+        }
+
+        .progress-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .progress-label {
+            font-size: 0.625rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .nav-arrow {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-arrow:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-info {
+            padding: 0.75rem 1.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.875rem;
+        }
+
+        .nav-info span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .phase-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .phase-number {
+                font-size: 3rem;
+            }
+            .timeline-step .step-label {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide { padding: 1.5rem; }
+            .timeline-header { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Timeline Progress Header -->
+    <header class="timeline-header">
+        <div class="timeline-bar">
+            <div class="timeline-step active" data-slide="0">
+                <div class="step-circle">🐴</div>
+                <span class="step-label">Кентавр</span>
+            </div>
+            <div class="timeline-step" data-slide="1">
+                <div class="step-circle">2</div>
+                <span class="step-label">Требования</span>
+            </div>
+            <div class="timeline-step" data-slide="2">
+                <div class="step-circle">3</div>
+                <span class="step-label">Разработка</span>
+            </div>
+            <div class="timeline-step" data-slide="3">
+                <div class="step-circle">4</div>
+                <span class="step-label">Review</span>
+            </div>
+            <div class="timeline-step" data-slide="4">
+                <div class="step-circle">5</div>
+                <span class="step-label">CI/CD</span>
+            </div>
+            <div class="timeline-step" data-slide="5">
+                <div class="step-circle">6</div>
+                <span class="step-label">Production</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="slider-container">
+        <div class="slider-track" id="sliderTrack">
+            <!-- Slide 1 -->
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="phase-header">
+                        <div class="phase-number">01</div>
+                        <div class="phase-info">
+                            <div class="phase-badge">🐴 Методология Кентавр</div>
+                            <h2 class="phase-title">Глубокая Аналитика</h2>
+                            <p class="phase-description">
+                                Человек-аналитик общается с заказчиком, используя AI для создания исчерпывающего опросника и структурирования информации в документы
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content-grid">
+                        <div class="features-card">
+                            <div class="card-title">Что делаем</div>
+                            <ul class="features-list">
+                                <li>
+                                    <div class="feature-icon">📝</div>
+                                    <div class="feature-text">
+                                        <strong>Исчерпывающий опросник</strong>
+                                        <p>AI формирует детальные вопросы по домену, выявляя edge cases</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">📋</div>
+                                    <div class="feature-text">
+                                        <strong>Vision & Scope</strong>
+                                        <p>Структурированный документ с целями и границами проекта</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🎨</div>
+                                    <div class="feature-text">
+                                        <strong>UI прототип</strong>
+                                        <p>Mockups, wireframes, user flow — визуализация продукта</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">✅</div>
+                                    <div class="feature-text">
+                                        <strong>Утверждение</strong>
+                                        <p>Согласование концепции с заказчиком перед разработкой</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="side-content">
+                            <div class="metrics-card">
+                                <div class="card-title">Метрики фазы</div>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">100%</div>
+                                        <div class="metric-label">Требования покрыты</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">3-5</div>
+                                        <div class="metric-label">Дней на фазу</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">50+</div>
+                                        <div class="metric-label">Вопросов опросника</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">10-15</div>
+                                        <div class="metric-label">Epic User Stories</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Результат фазы</div>
+                                <p class="result-text">Vision & Scope + Epic User Stories + UI прототип, утверждённые заказчиком — полное понимание проекта</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="phase-header">
+                        <div class="phase-number">02</div>
+                        <div class="phase-info">
+                            <div class="phase-badge">📋 Требования</div>
+                            <h2 class="phase-title">Детализация Требований</h2>
+                            <p class="phase-description">
+                                AI разбивает Epic User Stories на детальные пользовательские истории, готовые к разработке с техническими спецификациями
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content-grid">
+                        <div class="features-card">
+                            <div class="card-title">Что делаем</div>
+                            <ul class="features-list">
+                                <li>
+                                    <div class="feature-icon">📖</div>
+                                    <div class="feature-text">
+                                        <strong>User Stories с Acceptance Criteria</strong>
+                                        <p>Чёткие критерии приёмки и технические детали реализации</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🧪</div>
+                                    <div class="feature-text">
+                                        <strong>Test Scenarios (Given-When-Then)</strong>
+                                        <p>Формализованные сценарии тестирования для каждой US</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🎯</div>
+                                    <div class="feature-text">
+                                        <strong>Definition of Done</strong>
+                                        <p>Критерии готовности: код, тесты, документация, review</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🔗</div>
+                                    <div class="feature-text">
+                                        <strong>Связь с UI mockups</strong>
+                                        <p>Каждая US привязана к конкретным экранам из прототипа</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="side-content">
+                            <div class="metrics-card">
+                                <div class="card-title">Метрики фазы</div>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">15-25</div>
+                                        <div class="metric-label">US на Epic</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">100%</div>
+                                        <div class="metric-label">С тест-сценариями</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">3-5</div>
+                                        <div class="metric-label">AC на US</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">100%</div>
+                                        <div class="metric-label">Связь с UI</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Результат фазы</div>
+                                <p class="result-text">Backlog детальных User Stories с техническими спецификациями, готовых к немедленной разработке</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="phase-header">
+                        <div class="phase-number">03</div>
+                        <div class="phase-info">
+                            <div class="phase-badge">💻 Разработка</div>
+                            <h2 class="phase-title">Feature Branch</h2>
+                            <p class="phase-description">
+                                Claude Code пишет код, unit тесты и E2E сценарии. Точность 72.7% на SWE-bench Verified — реальные production задачи
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content-grid">
+                        <div class="features-card">
+                            <div class="card-title">Что делаем</div>
+                            <ul class="features-list">
+                                <li>
+                                    <div class="feature-icon">🌿</div>
+                                    <div class="feature-text">
+                                        <strong>Изолированный Feature Branch</strong>
+                                        <p>git checkout -b feature/US-123 для безопасной разработки</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🤖</div>
+                                    <div class="feature-text">
+                                        <strong>Claude Code реализация</strong>
+                                        <p>AI пишет код по спецификации, следуя best practices</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">✅</div>
+                                    <div class="feature-text">
+                                        <strong>Unit Tests 80%+ Coverage</strong>
+                                        <p>Автоматическая генерация тестов с высоким покрытием</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🎭</div>
+                                    <div class="feature-text">
+                                        <strong>Playwright E2E</strong>
+                                        <p>End-to-end тест по Acceptance Criteria для каждой US</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="side-content">
+                            <div class="metrics-card">
+                                <div class="card-title">Метрики фазы</div>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">72.7%</div>
+                                        <div class="metric-label">SWE-bench</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">80%+</div>
+                                        <div class="metric-label">Coverage</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">2x</div>
+                                        <div class="metric-label">Быстрее</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">100%</div>
+                                        <div class="metric-label">E2E тесты</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Результат фазы</div>
+                                <p class="result-text">Feature branch с реализацией US + unit tests + Playwright E2E тест, готовый к code review</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="phase-header">
+                        <div class="phase-number">04</div>
+                        <div class="phase-info">
+                            <div class="phase-badge">👁️ Review</div>
+                            <h2 class="phase-title">Code Review и Merge</h2>
+                            <p class="phase-description">
+                                Двухуровневый review: AI проверяет технические аспекты, человек — архитектурные решения и бизнес-логику
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content-grid">
+                        <div class="features-card">
+                            <div class="card-title">Что делаем</div>
+                            <ul class="features-list">
+                                <li>
+                                    <div class="feature-icon">🤖</div>
+                                    <div class="feature-text">
+                                        <strong>AI Pre-Review</strong>
+                                        <p>Автоматическая проверка security, code quality, performance</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">👤</div>
+                                    <div class="feature-text">
+                                        <strong>Human Review</strong>
+                                        <p>Архитектура, бизнес-логика, соответствие требованиям</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">📝</div>
+                                    <div class="feature-text">
+                                        <strong>Pull Request</strong>
+                                        <p>Детальное описание изменений, ссылка на User Story</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">✅</div>
+                                    <div class="feature-text">
+                                        <strong>Merge в main</strong>
+                                        <p>Только после прохождения обоих уровней review</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="side-content">
+                            <div class="metrics-card">
+                                <div class="card-title">Проверки AI</div>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">🔒</div>
+                                        <div class="metric-label">Security</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">📊</div>
+                                        <div class="metric-label">Quality</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">⚡</div>
+                                        <div class="metric-label">Performance</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">🧹</div>
+                                        <div class="metric-label">Linting</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Результат фазы</div>
+                                <p class="result-text">Код прошёл двойную проверку и смержен в main branch, готов к CI/CD pipeline</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5 -->
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="phase-header">
+                        <div class="phase-number">05</div>
+                        <div class="phase-info">
+                            <div class="phase-badge">🔄 CI/CD</div>
+                            <h2 class="phase-title">Тестовый Контур</h2>
+                            <p class="phase-description">
+                                После merge автоматически запускается CI/CD pipeline с полным набором проверок и regression testing
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content-grid">
+                        <div class="features-card">
+                            <div class="card-title">Что делаем</div>
+                            <ul class="features-list">
+                                <li>
+                                    <div class="feature-icon">🚀</div>
+                                    <div class="feature-text">
+                                        <strong>Auto Deploy</strong>
+                                        <p>На test environment сразу после merge — zero manual work</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🔨</div>
+                                    <div class="feature-text">
+                                        <strong>Build + Unit Tests</strong>
+                                        <p>Полный build и все unit тесты для regression check</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🎭</div>
+                                    <div class="feature-text">
+                                        <strong>E2E Regression Suite</strong>
+                                        <p>Новый тест + все существующие E2E тесты</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">📹</div>
+                                    <div class="feature-text">
+                                        <strong>Артефакты при падении</strong>
+                                        <p>Видео + скриншоты + trace для быстрого анализа</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="side-content">
+                            <div class="metrics-card">
+                                <div class="card-title">Pipeline Status</div>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">8m</div>
+                                        <div class="metric-label">Total time</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">305</div>
+                                        <div class="metric-label">Tests</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">0</div>
+                                        <div class="metric-label">Failures</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">100%</div>
+                                        <div class="metric-label">Success</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Результат фазы</div>
+                                <p class="result-text">Полная уверенность что новая функциональность работает и не сломала существующую</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6 -->
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="phase-header">
+                        <div class="phase-number">06</div>
+                        <div class="phase-info">
+                            <div class="phase-badge">🚀 Production</div>
+                            <h2 class="phase-title">Production и Мониторинг</h2>
+                            <p class="phase-description">
+                                UAT с заказчиком на staging, затем production deployment с проактивным AI-мониторингом
+                            </p>
+                        </div>
+                    </div>
+                    <div class="content-grid">
+                        <div class="features-card">
+                            <div class="card-title">Что делаем</div>
+                            <ul class="features-list">
+                                <li>
+                                    <div class="feature-icon">🧪</div>
+                                    <div class="feature-text">
+                                        <strong>UAT на Staging</strong>
+                                        <p>Заказчик тестирует функциональность на идентичном окружении</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🔄</div>
+                                    <div class="feature-text">
+                                        <strong>Blue-Green Deployment</strong>
+                                        <p>Zero-downtime deploy с мгновенным rollback при проблемах</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">📊</div>
+                                    <div class="feature-text">
+                                        <strong>AI Observability</strong>
+                                        <p>E2E мониторинг performance, errors, user behavior</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="feature-icon">🔮</div>
+                                    <div class="feature-text">
+                                        <strong>Predictive Analysis</strong>
+                                        <p>AI предсказывает потенциальные сбои до их возникновения</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="side-content">
+                            <div class="metrics-card">
+                                <div class="card-title">Production Metrics</div>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">99.9%</div>
+                                        <div class="metric-label">Uptime</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">&lt;200ms</div>
+                                        <div class="metric-label">Response</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">0</div>
+                                        <div class="metric-label">Downtime</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">&lt;5min</div>
+                                        <div class="metric-label">Rollback</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-label">Результат фазы</div>
+                                <p class="result-text">Стабильный production с проактивным мониторингом и готовностью к следующим User Stories</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav-controls">
+        <button class="nav-arrow" id="prevBtn" disabled>←</button>
+        <div class="nav-info">Фаза <span id="currentSlide">1</span> из 6</div>
+        <button class="nav-arrow" id="nextBtn">→</button>
+    </nav>
+
+    <script>
+        const track = document.getElementById('sliderTrack');
+        const steps = document.querySelectorAll('.timeline-step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentSlideEl = document.getElementById('currentSlide');
+        const totalSlides = 6;
+        let currentSlide = 0;
+
+        function goToSlide(index) {
+            currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
+            track.style.transform = `translateX(-${currentSlide * 100}vw)`;
+
+            steps.forEach((step, i) => {
+                step.classList.remove('active', 'completed');
+                if (i < currentSlide) step.classList.add('completed');
+                if (i === currentSlide) step.classList.add('active');
+            });
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            currentSlideEl.textContent = currentSlide + 1;
+        }
+
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+        steps.forEach(step => {
+            step.addEventListener('click', () => {
+                goToSlide(parseInt(step.dataset.slide));
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+        });
+    </script>
+</body>
+</html>

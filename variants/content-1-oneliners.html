@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | One-Liners</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: #18181b;
+            --text: #fafafa;
+            --muted: #a1a1aa;
+            --accent: #3b82f6;
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.125rem;
+            color: var(--muted);
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Phases */
+        .phases {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .phase {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .phase-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .phase-content h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-oneliner {
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .phase-bullets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .bullet {
+            padding: 0.375rem 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            color: var(--accent);
+        }
+
+        /* CTA */
+        .cta {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 3rem;
+            background: var(--gradient);
+            border-radius: 20px;
+        }
+
+        .cta h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cta p {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 640px) {
+            .phase {
+                grid-template-columns: 1fr;
+            }
+            .phase-icon {
+                width: 48px;
+                height: 48px;
+            }
+            .stats { gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI-Driven Development</h1>
+            <p class="tagline">Методология Кентавр + Claude AI</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">55.8%</div>
+                <div class="stat-label">Ускорение</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">80%</div>
+                <div class="stat-label">Покрытие</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">6 мес</div>
+                <div class="stat-label">ROI</div>
+            </div>
+        </div>
+
+        <div class="phases">
+            <div class="phase">
+                <div class="phase-icon">🐴</div>
+                <div class="phase-content">
+                    <h3>Кентавр-Аналитика</h3>
+                    <p class="phase-oneliner">Аналитик + AI создают опросник и Vision & Scope</p>
+                    <div class="phase-bullets">
+                        <span class="bullet">Опросник</span>
+                        <span class="bullet">Встречи</span>
+                        <span class="bullet">Документ</span>
+                        <span class="bullet">UI прототип</span>
+                        <span class="bullet">Утверждение</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-icon">2</div>
+                <div class="phase-content">
+                    <h3>Детализация</h3>
+                    <p class="phase-oneliner">AI разбивает Epic на готовые User Stories</p>
+                    <div class="phase-bullets">
+                        <span class="bullet">User Stories</span>
+                        <span class="bullet">Acceptance Criteria</span>
+                        <span class="bullet">Test scenarios</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-icon">3</div>
+                <div class="phase-content">
+                    <h3>Feature Branch</h3>
+                    <p class="phase-oneliner">Claude Code пишет код и тесты (72.7% SWE-bench)</p>
+                    <div class="phase-bullets">
+                        <span class="bullet">Код</span>
+                        <span class="bullet">Unit 80%+</span>
+                        <span class="bullet">E2E Playwright</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-icon">4</div>
+                <div class="phase-content">
+                    <h3>Review & Merge</h3>
+                    <p class="phase-oneliner">AI + Human двойная проверка</p>
+                    <div class="phase-bullets">
+                        <span class="bullet">AI: security</span>
+                        <span class="bullet">Human: архитектура</span>
+                        <span class="bullet">Merge</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-icon">5</div>
+                <div class="phase-content">
+                    <h3>CI/CD</h3>
+                    <p class="phase-oneliner">Автоматический pipeline с полным regression</p>
+                    <div class="phase-bullets">
+                        <span class="bullet">Build</span>
+                        <span class="bullet">Unit tests</span>
+                        <span class="bullet">E2E suite</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase">
+                <div class="phase-icon">6</div>
+                <div class="phase-content">
+                    <h3>Production</h3>
+                    <p class="phase-oneliner">UAT → Deploy → AI мониторинг</p>
+                    <div class="phase-bullets">
+                        <span class="bullet">Blue-green</span>
+                        <span class="bullet">Observability</span>
+                        <span class="bullet">Predictive</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <h2>Готовы ускорить разработку?</h2>
+            <p>Получите консультацию</p>
+        </div>
+    </div>
+</body>
+</html>

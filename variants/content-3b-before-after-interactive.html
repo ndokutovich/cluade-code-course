@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Interactive Comparison</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --red: #ef4444;
+            --green: #22c55e;
+            --accent: #3b82f6;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            color: var(--muted);
+            font-size: 1.125rem;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-tab:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .category-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* Comparison Slider */
+        .comparison-wrapper {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .comparison-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            min-height: 500px;
+        }
+
+        .comparison-side {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .before-side {
+            left: 0;
+            right: 50%;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+            border-right: 2px solid var(--border);
+            clip-path: inset(0 var(--clip-before, 50%) 0 0);
+        }
+
+        .after-side {
+            left: 50%;
+            right: 0;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(34, 197, 94, 0.15));
+            clip-path: inset(0 0 0 var(--clip-after, 0%));
+        }
+
+        .side-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1.5rem;
+        }
+
+        .before-side .side-label { color: var(--red); }
+        .after-side .side-label { color: var(--green); }
+
+        .side-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .side-subtitle {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .side-features {
+            list-style: none;
+            flex: 1;
+        }
+
+        .side-features li {
+            padding: 0.75rem 0;
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .before-side .side-features li::before {
+            content: '✗';
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        .after-side .side-features li::before {
+            content: '✓';
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .metric-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.8125rem;
+        }
+
+        .before-side .metric-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+
+        .after-side .metric-badge {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--green);
+        }
+
+        /* Slider Handle */
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: var(--accent);
+            cursor: ew-resize;
+            z-index: 10;
+            transform: translateX(-50%);
+        }
+
+        .slider-handle::before {
+            content: '⟷';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .slider-hint {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--green);
+            transform: translateY(-4px);
+        }
+
+        .stat-comparison {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-old {
+            font-size: 1rem;
+            color: var(--red);
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .stat-arrow {
+            color: var(--accent);
+        }
+
+        .stat-new {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            border-radius: 20px;
+        }
+
+        .cta-section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: var(--accent);
+            font-weight: 700;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .comparison-container {
+                aspect-ratio: auto;
+                min-height: auto;
+            }
+            .comparison-side {
+                position: relative;
+                clip-path: none !important;
+                padding: 2rem;
+            }
+            .before-side {
+                right: 0;
+                border-right: none;
+                border-bottom: 2px solid var(--border);
+            }
+            .after-side {
+                left: 0;
+            }
+            .slider-handle {
+                display: none;
+            }
+            .slider-hint {
+                display: none;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="badge">Интерактивное сравнение</div>
+            <h1>Традиционно vs AI-Driven</h1>
+            <p class="tagline">Перетащите слайдер, чтобы сравнить подходы</p>
+        </header>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="category-tab active" data-category="analytics">Аналитика</button>
+            <button class="category-tab" data-category="development">Разработка</button>
+            <button class="category-tab" data-category="testing">Тестирование</button>
+            <button class="category-tab" data-category="deployment">Деплой</button>
+        </div>
+
+        <p class="slider-hint">← Перетащите слайдер для сравнения →</p>
+
+        <!-- Comparison Slider -->
+        <div class="comparison-wrapper">
+            <div class="comparison-container" id="comparisonContainer">
+                <!-- Analytics -->
+                <div class="comparison-side before-side" data-category="analytics">
+                    <div class="side-label">Традиционно</div>
+                    <h3 class="side-title">Ручная аналитика</h3>
+                    <p class="side-subtitle">Классический подход</p>
+                    <ul class="side-features">
+                        <li>Разрозненные заметки и переписка</li>
+                        <li>Неполные требования, edge cases упущены</li>
+                        <li>Документация <span class="metric-badge">2-3 недели</span></li>
+                        <li>Прототипы требуют отдельного дизайнера</li>
+                        <li>Частые итерации из-за недопонимания</li>
+                    </ul>
+                </div>
+                <div class="comparison-side after-side" data-category="analytics">
+                    <div class="side-label">AI-Driven</div>
+                    <h3 class="side-title">Кентавр-аналитика</h3>
+                    <p class="side-subtitle">Человек + AI</p>
+                    <ul class="side-features">
+                        <li>Исчерпывающий AI-опросник по домену</li>
+                        <li>100% покрытие требований и edge cases</li>
+                        <li>Vision & Scope за <span class="metric-badge">3-5 дней</span></li>
+                        <li>UI прототипы генерируются AI</li>
+                        <li>Утверждение до начала разработки</li>
+                    </ul>
+                </div>
+
+                <!-- Development -->
+                <div class="comparison-side before-side" data-category="development" style="display: none;">
+                    <div class="side-label">Традиционно</div>
+                    <h3 class="side-title">Ручное кодирование</h3>
+                    <p class="side-subtitle">Стандартная скорость</p>
+                    <ul class="side-features">
+                        <li>Разработчик пишет весь код вручную</li>
+                        <li>Базовая скорость разработки</li>
+                        <li>Code review только человеком</li>
+                        <li>Документация по остаточному принципу</li>
+                        <li>Частые ошибки и рефакторинг</li>
+                    </ul>
+                </div>
+                <div class="comparison-side after-side" data-category="development" style="display: none;">
+                    <div class="side-label">AI-Driven</div>
+                    <h3 class="side-title">Claude Code</h3>
+                    <p class="side-subtitle">72.7% SWE-bench accuracy</p>
+                    <ul class="side-features">
+                        <li>AI пишет код по спецификациям</li>
+                        <li>Разработка на <span class="metric-badge">55.8% быстрее</span></li>
+                        <li>Двухуровневый review: AI + Human</li>
+                        <li>Автодокументация кода</li>
+                        <li>Best practices из коробки</li>
+                    </ul>
+                </div>
+
+                <!-- Testing -->
+                <div class="comparison-side before-side" data-category="testing" style="display: none;">
+                    <div class="side-label">Традиционно</div>
+                    <h3 class="side-title">Ручное тестирование</h3>
+                    <p class="side-subtitle">По остаточному принципу</p>
+                    <ul class="side-features">
+                        <li>Тесты пишутся в конце</li>
+                        <li>Покрытие <span class="metric-badge">30-40%</span></li>
+                        <li>E2E — задача отдельной QA команды</li>
+                        <li>80% coverage за <span class="metric-badge">6+ часов</span></li>
+                        <li>Регрессия обнаруживается поздно</li>
+                    </ul>
+                </div>
+                <div class="comparison-side after-side" data-category="testing" style="display: none;">
+                    <div class="side-label">AI-Driven</div>
+                    <h3 class="side-title">Автоматизация тестов</h3>
+                    <p class="side-subtitle">Playwright + Unit</p>
+                    <ul class="side-features">
+                        <li>Тесты генерируются вместе с кодом</li>
+                        <li>Покрытие <span class="metric-badge">80%+</span></li>
+                        <li>E2E для каждой User Story сразу</li>
+                        <li>80% coverage за <span class="metric-badge">2 часа</span></li>
+                        <li>Regression suite на каждый commit</li>
+                    </ul>
+                </div>
+
+                <!-- Deployment -->
+                <div class="comparison-side before-side" data-category="deployment" style="display: none;">
+                    <div class="side-label">Традиционно</div>
+                    <h3 class="side-title">Ручной деплой</h3>
+                    <p class="side-subtitle">Риск ошибок</p>
+                    <ul class="side-features">
+                        <li>Ручные шаги, чеклисты</li>
+                        <li>Downtime при обновлениях</li>
+                        <li>Реактивный мониторинг</li>
+                        <li>Rollback — стресс и время</li>
+                        <li>Проблемы от пользователей</li>
+                    </ul>
+                </div>
+                <div class="comparison-side after-side" data-category="deployment" style="display: none;">
+                    <div class="side-label">AI-Driven</div>
+                    <h3 class="side-title">CI/CD автоматизация</h3>
+                    <p class="side-subtitle">Blue-green deploy</p>
+                    <ul class="side-features">
+                        <li>Полностью автоматический pipeline</li>
+                        <li>Zero-downtime deployment</li>
+                        <li>AI Observability <span class="metric-badge">99.9% uptime</span></li>
+                        <li>Мгновенный rollback <span class="metric-badge">&lt;5 мин</span></li>
+                        <li>Predictive мониторинг</li>
+                    </ul>
+                </div>
+
+                <div class="slider-handle" id="sliderHandle"></div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-comparison">
+                    <span class="stat-old">6ч</span>
+                    <span class="stat-arrow">→</span>
+                    <span class="stat-new">2ч</span>
+                </div>
+                <div class="stat-label">80% покрытие</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-comparison">
+                    <span class="stat-old">40%</span>
+                    <span class="stat-arrow">→</span>
+                    <span class="stat-new">80%+</span>
+                </div>
+                <div class="stat-label">Test coverage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-comparison">
+                    <span class="stat-old">1x</span>
+                    <span class="stat-arrow">→</span>
+                    <span class="stat-new">2x</span>
+                </div>
+                <div class="stat-label">Скорость задач</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-comparison">
+                    <span class="stat-old">∞</span>
+                    <span class="stat-arrow">→</span>
+                    <span class="stat-new">6мес</span>
+                </div>
+                <div class="stat-label">ROI окупаемость</div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>Готовы к трансформации?</h2>
+            <p>Внедрите AI-Driven Development</p>
+            <a href="#" class="cta-button">Получить консультацию</a>
+        </div>
+    </div>
+
+    <script>
+        // Slider functionality
+        const container = document.getElementById('comparisonContainer');
+        const handle = document.getElementById('sliderHandle');
+        let isDragging = false;
+
+        function updateSlider(percentage) {
+            const beforeClip = 100 - percentage;
+            const afterClip = percentage;
+            handle.style.left = percentage + '%';
+            document.querySelectorAll('.before-side').forEach(el => {
+                el.style.setProperty('--clip-before', beforeClip + '%');
+            });
+            document.querySelectorAll('.after-side').forEach(el => {
+                el.style.setProperty('--clip-after', (100 - percentage) + '%');
+            });
+        }
+
+        handle.addEventListener('mousedown', () => isDragging = true);
+        document.addEventListener('mouseup', () => isDragging = false);
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const rect = container.getBoundingClientRect();
+            let percentage = ((e.clientX - rect.left) / rect.width) * 100;
+            percentage = Math.max(10, Math.min(90, percentage));
+            updateSlider(percentage);
+        });
+
+        // Touch support
+        handle.addEventListener('touchstart', () => isDragging = true);
+        document.addEventListener('touchend', () => isDragging = false);
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const rect = container.getBoundingClientRect();
+            let percentage = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
+            percentage = Math.max(10, Math.min(90, percentage));
+            updateSlider(percentage);
+        });
+
+        // Category tabs
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
+
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                document.querySelectorAll('.comparison-side').forEach(side => {
+                    side.style.display = side.dataset.category === category ? 'flex' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

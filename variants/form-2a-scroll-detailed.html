@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Scroll Detailed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --text: #ffffff;
+            --muted: #888;
+            --accent: #00ff88;
+            --accent-2: #00d4ff;
+            --purple: #a855f7;
+            --card-bg: rgba(255,255,255,0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--purple));
+            z-index: 1000;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        /* Phase Navigation */
+        .phase-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .phase-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .phase-dot.active {
+            background: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .phase-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: var(--muted);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .phase-dot:hover::after {
+            opacity: 1;
+        }
+
+        /* Full Screen Sections */
+        .phase-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 4rem;
+            position: relative;
+        }
+
+        .phase-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .phase-section:nth-child(odd)::before {
+            background: radial-gradient(circle at 20% 50%, var(--accent) 0%, transparent 50%);
+        }
+
+        .phase-section:nth-child(even)::before {
+            background: radial-gradient(circle at 80% 50%, var(--purple) 0%, transparent 50%);
+        }
+
+        /* Content Layout */
+        .phase-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .phase-section:nth-child(even) .phase-container {
+            direction: rtl;
+        }
+
+        .phase-section:nth-child(even) .phase-container > * {
+            direction: ltr;
+        }
+
+        .phase-content {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .phase-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .phase-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 6rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+
+        .phase-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .phase-title span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .phase-description {
+            font-size: 1.125rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Features */
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .features-list li {
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .features-list li:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--accent);
+            transform: translateX(8px);
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.875rem;
+        }
+
+        .feature-text strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+
+        .feature-text p {
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* Result Card */
+        .result-card {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1));
+            border-left: 4px solid var(--accent);
+            border-radius: 0 16px 16px 0;
+        }
+
+        .result-card strong {
+            color: var(--accent);
+        }
+
+        /* Phase Visual */
+        .phase-visual {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+        }
+
+        .phase-visual.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        /* Process Flow */
+        .process-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+
+        .process-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--bg);
+            flex-shrink: 0;
+        }
+
+        .process-text {
+            font-size: 0.9375rem;
+        }
+
+        /* Metrics Bar */
+        .metrics-bar {
+            display: flex;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 255, 136, 0.05);
+            border-radius: 12px;
+            justify-content: center;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .metric-label {
+            font-size: 0.625rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            justify-content: center;
+        }
+
+        .hero-section .phase-container {
+            grid-template-columns: 1fr;
+            max-width: 1000px;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            display: block;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        .hero-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-hint::after {
+            content: '↓';
+            display: block;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .phase-section { padding: 4rem 2rem; }
+            .phase-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .phase-section:nth-child(even) .phase-container { direction: ltr; }
+            .phase-nav { display: none; }
+            .hero-stats { flex-wrap: wrap; gap: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <nav class="phase-nav">
+        <div class="phase-dot active" data-section="0" data-label="Intro"></div>
+        <div class="phase-dot" data-section="1" data-label="Кентавр"></div>
+        <div class="phase-dot" data-section="2" data-label="Требования"></div>
+        <div class="phase-dot" data-section="3" data-label="Разработка"></div>
+        <div class="phase-dot" data-section="4" data-label="Review"></div>
+        <div class="phase-dot" data-section="5" data-label="CI/CD"></div>
+        <div class="phase-dot" data-section="6" data-label="Production"></div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="phase-section hero-section">
+        <div class="phase-container">
+            <div class="phase-content visible" style="text-align: center;">
+                <h1 class="hero-title">
+                    AI-Driven<br>
+                    <span>Development</span>
+                </h1>
+                <p class="phase-description" style="max-width: 700px; margin: 0 auto;">
+                    Проверенная методология "Кентавр", где Claude AI выступает как интеллектуальный партнёр, увеличивающий скорость и качество на каждом этапе разработки
+                </p>
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-value">55.8%</div>
+                        <div class="hero-stat-label">Ускорение</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">80%</div>
+                        <div class="hero-stat-label">Покрытие тестами</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">2x</div>
+                        <div class="hero-stat-label">Быстрее задачи</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">6 мес</div>
+                        <div class="hero-stat-label">ROI окупаемость</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- Phase 1: Кентавр -->
+    <section class="phase-section">
+        <div class="phase-container">
+            <div class="phase-content">
+                <span class="phase-number">01</span>
+                <h2 class="phase-title">Фаза <span>КЕНТАВР</span><br>Глубокая Аналитика</h2>
+                <p class="phase-description">
+                    Уникальная практика — человек-аналитик общается с заказчиком, используя AI как мощный инструмент для создания исчерпывающего опросника и структурирования информации в документы
+                </p>
+                <ul class="features-list">
+                    <li>
+                        <div class="feature-icon">📝</div>
+                        <div class="feature-text">
+                            <strong>Исчерпывающий опросник</strong>
+                            <p>Аналитик с AI формирует детальные вопросы по домену, выявляя edge cases и скрытые требования</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">📋</div>
+                        <div class="feature-text">
+                            <strong>Vision & Scope документ</strong>
+                            <p>AI обрабатывает ответы и создаёт структурированный документ с целями, границами и приоритетами</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-text">
+                            <strong>UI прототип</strong>
+                            <p>Генерация mockups, wireframes, user flow — визуализация будущего продукта</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-text">
+                            <strong>Утверждение заказчиком</strong>
+                            <p>Согласование концепции, Epic User Stories и прототипа перед началом разработки</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="result-card">
+                    <strong>Результат:</strong> Vision & Scope + Epic User Stories + UI прототип, утверждённые заказчиком — полное понимание проекта
+                </div>
+            </div>
+            <div class="phase-visual">
+                <h4 style="margin-bottom: 1.5rem; color: var(--accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">Процесс Кентавр-аналитики</h4>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="process-number">1</div>
+                        <span class="process-text">Kickoff meeting с заказчиком</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">2</div>
+                        <span class="process-text">AI генерирует опросник по домену</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">3</div>
+                        <span class="process-text">Аналитик проводит интервью</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">4</div>
+                        <span class="process-text">AI структурирует в документы</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">5</div>
+                        <span class="process-text">Создание UI прототипа</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">6</div>
+                        <span class="process-text">Утверждение заказчиком</span>
+                    </div>
+                </div>
+                <div class="metrics-bar" style="margin-top: 1.5rem;">
+                    <div class="metric-item">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Требования покрыты</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">3-5</div>
+                        <div class="metric-label">Дней на фазу</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2: Детализация -->
+    <section class="phase-section">
+        <div class="phase-container">
+            <div class="phase-content">
+                <span class="phase-number">02</span>
+                <h2 class="phase-title">Детализация<br><span>Требований</span></h2>
+                <p class="phase-description">
+                    AI разбивает Epic User Stories на детальные пользовательские истории, готовые к разработке с техническими спецификациями и тестовыми сценариями
+                </p>
+                <ul class="features-list">
+                    <li>
+                        <div class="feature-icon">📖</div>
+                        <div class="feature-text">
+                            <strong>User Stories с Acceptance Criteria</strong>
+                            <p>Каждая история имеет чёткие критерии приёмки и технические детали реализации</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🧪</div>
+                        <div class="feature-text">
+                            <strong>Test Scenarios (Given-When-Then)</strong>
+                            <p>Формализованные сценарии тестирования для каждой User Story</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-text">
+                            <strong>Definition of Done</strong>
+                            <p>Чёткие критерии готовности: код, тесты, документация, review</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🔗</div>
+                        <div class="feature-text">
+                            <strong>Связь с UI mockups</strong>
+                            <p>Каждая US привязана к конкретным экранам из прототипа</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="result-card">
+                    <strong>Результат:</strong> Backlog детальных User Stories с техническими спецификациями, готовых к немедленной разработке
+                </div>
+            </div>
+            <div class="phase-visual">
+                <h4 style="margin-bottom: 1.5rem; color: var(--accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">Структура User Story</h4>
+                <div style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; font-family: monospace; font-size: 0.8125rem; line-height: 1.8;">
+                    <div style="color: var(--accent);">## US-123: Авторизация пользователя</div>
+                    <div style="color: var(--muted); margin: 1rem 0;">
+                        <strong style="color: var(--text);">As a</strong> пользователь<br>
+                        <strong style="color: var(--text);">I want</strong> войти в систему<br>
+                        <strong style="color: var(--text);">So that</strong> получить доступ к функциям
+                    </div>
+                    <div style="color: var(--accent); margin-top: 1rem;">### Acceptance Criteria</div>
+                    <div style="color: var(--muted);">
+                        ✓ Email валидация<br>
+                        ✓ Password минимум 8 символов<br>
+                        ✓ JWT токен в ответе<br>
+                        ✓ Редирект на dashboard
+                    </div>
+                    <div style="color: var(--accent); margin-top: 1rem;">### Test Scenario</div>
+                    <div style="color: var(--muted);">
+                        <strong>Given</strong> valid credentials<br>
+                        <strong>When</strong> submit login form<br>
+                        <strong>Then</strong> redirect to dashboard
+                    </div>
+                </div>
+                <div class="metrics-bar" style="margin-top: 1.5rem;">
+                    <div class="metric-item">
+                        <div class="metric-value">15-25</div>
+                        <div class="metric-label">US на Epic</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">С тест-сценариями</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 3: Разработка -->
+    <section class="phase-section">
+        <div class="phase-container">
+            <div class="phase-content">
+                <span class="phase-number">03</span>
+                <h2 class="phase-title">Разработка в<br><span>Feature Branch</span></h2>
+                <p class="phase-description">
+                    Для каждой User Story создаётся feature branch. Claude Code пишет код, unit тесты и E2E сценарии с точностью 72.7% на SWE-bench Verified
+                </p>
+                <ul class="features-list">
+                    <li>
+                        <div class="feature-icon">🌿</div>
+                        <div class="feature-text">
+                            <strong>Изолированный Feature Branch</strong>
+                            <p>git checkout -b feature/US-123 — изоляция изменений для безопасной разработки</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🤖</div>
+                        <div class="feature-text">
+                            <strong>Claude Code реализация</strong>
+                            <p>AI пишет код согласно Detailed US, следуя best practices и архитектурным паттернам</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-text">
+                            <strong>Unit Tests 80%+ Coverage</strong>
+                            <p>Автоматическая генерация тестов с высоким покрытием, локальный запуск перед commit</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🎭</div>
+                        <div class="feature-text">
+                            <strong>Playwright E2E для каждой US</strong>
+                            <p>End-to-end тест по Acceptance Criteria — проверка всего flow</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="result-card">
+                    <strong>Результат:</strong> Feature branch с полной реализацией US + unit tests + Playwright E2E тест, готовый к code review
+                </div>
+            </div>
+            <div class="phase-visual">
+                <h4 style="margin-bottom: 1.5rem; color: var(--accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">Метрики разработки</h4>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">72.7%</div>
+                        <div class="stat-label">SWE-bench accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">80%+</div>
+                        <div class="stat-label">Test coverage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2x</div>
+                        <div class="stat-label">Быстрее разработка</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">US с E2E тестами</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 255, 136, 0.05); border-radius: 12px;">
+                    <div style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Branch Structure</div>
+                    <div style="font-family: monospace; font-size: 0.8125rem; color: var(--accent);">
+                        main<br>
+                        └── feature/US-123-user-auth<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;├── src/auth/*<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;├── tests/unit/*<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;└── e2e/auth.spec.ts
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 4: Review -->
+    <section class="phase-section">
+        <div class="phase-container">
+            <div class="phase-content">
+                <span class="phase-number">04</span>
+                <h2 class="phase-title">Code Review<br><span>и Merge</span></h2>
+                <p class="phase-description">
+                    Двухуровневый review процесс: AI проверяет технические аспекты, человек — архитектурные решения и соответствие бизнес-требованиям
+                </p>
+                <ul class="features-list">
+                    <li>
+                        <div class="feature-icon">🤖</div>
+                        <div class="feature-text">
+                            <strong>AI Pre-Review</strong>
+                            <p>Автоматическая проверка security vulnerabilities, code quality, performance issues</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">👤</div>
+                        <div class="feature-text">
+                            <strong>Human Review</strong>
+                            <p>Проверка архитектурных решений, бизнес-логики, соответствия требованиям</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">📝</div>
+                        <div class="feature-text">
+                            <strong>Pull Request</strong>
+                            <p>Детальное описание изменений, ссылка на User Story, screenshots при UI изменениях</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-text">
+                            <strong>Merge в main</strong>
+                            <p>Только после прохождения обоих уровней review — двойная гарантия качества</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="result-card">
+                    <strong>Результат:</strong> Код прошёл двойную проверку и смержен в main branch, готов к CI/CD pipeline
+                </div>
+            </div>
+            <div class="phase-visual">
+                <h4 style="margin-bottom: 1.5rem; color: var(--accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">Review Pipeline</h4>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="process-number">🤖</div>
+                        <span class="process-text"><strong>AI Check:</strong> Security scan → SAST/DAST</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">🤖</div>
+                        <span class="process-text"><strong>AI Check:</strong> Code quality → Linting, complexity</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">🤖</div>
+                        <span class="process-text"><strong>AI Check:</strong> Performance → N+1, memory leaks</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">👤</div>
+                        <span class="process-text"><strong>Human:</strong> Architecture review</span>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">👤</div>
+                        <span class="process-text"><strong>Human:</strong> Business logic validation</span>
+                    </div>
+                    <div class="process-step" style="background: rgba(0, 255, 136, 0.1); border: 1px solid var(--accent);">
+                        <div class="process-number">✓</div>
+                        <span class="process-text"><strong style="color: var(--accent);">Approved → Merge to main</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 5: CI/CD -->
+    <section class="phase-section">
+        <div class="phase-container">
+            <div class="phase-content">
+                <span class="phase-number">05</span>
+                <h2 class="phase-title">CI/CD<br><span>Тестовый Контур</span></h2>
+                <p class="phase-description">
+                    После merge в main автоматически запускается CI/CD pipeline на тестовом контуре с полным набором проверок и regression testing
+                </p>
+                <ul class="features-list">
+                    <li>
+                        <div class="feature-icon">🚀</div>
+                        <div class="feature-text">
+                            <strong>Автоматический Deploy</strong>
+                            <p>На test environment сразу после merge — zero manual intervention</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🔨</div>
+                        <div class="feature-text">
+                            <strong>Build + Unit Tests</strong>
+                            <p>Полный build, запуск всех unit тестов — проверка что ничего не сломалось</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🎭</div>
+                        <div class="feature-text">
+                            <strong>Playwright E2E на CI</strong>
+                            <p>Новый тест для US + полный regression suite для всех существующих фич</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">📹</div>
+                        <div class="feature-text">
+                            <strong>Артефакты при падении</strong>
+                            <p>Видео + скриншоты + trace автоматически сохраняются для анализа</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="result-card">
+                    <strong>Результат:</strong> Полная уверенность что новая функциональность работает И не сломала существующую
+                </div>
+            </div>
+            <div class="phase-visual">
+                <h4 style="margin-bottom: 1.5rem; color: var(--accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">CI/CD Pipeline</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div style="padding: 1rem; background: rgba(0, 255, 136, 0.1); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Build</span>
+                        <span style="color: var(--accent); font-weight: 600;">✓ 45s</span>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(0, 255, 136, 0.1); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Unit Tests (247)</span>
+                        <span style="color: var(--accent); font-weight: 600;">✓ 1m 23s</span>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(0, 255, 136, 0.1); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Lint + Type Check</span>
+                        <span style="color: var(--accent); font-weight: 600;">✓ 32s</span>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(0, 255, 136, 0.1); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>E2E Tests (58)</span>
+                        <span style="color: var(--accent); font-weight: 600;">✓ 4m 12s</span>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(0, 255, 136, 0.1); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Deploy to Test</span>
+                        <span style="color: var(--accent); font-weight: 600;">✓ 2m 05s</span>
+                    </div>
+                </div>
+                <div class="metrics-bar" style="margin-top: 1.5rem;">
+                    <div class="metric-item">
+                        <div class="metric-value">8m</div>
+                        <div class="metric-label">Total pipeline</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">305</div>
+                        <div class="metric-label">Tests passed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 6: Production -->
+    <section class="phase-section">
+        <div class="phase-container">
+            <div class="phase-content">
+                <span class="phase-number">06</span>
+                <h2 class="phase-title">Production<br><span>и Мониторинг</span></h2>
+                <p class="phase-description">
+                    После успешного CI — UAT с заказчиком на staging, затем production deployment с проактивным AI-мониторингом и predictive analysis
+                </p>
+                <ul class="features-list">
+                    <li>
+                        <div class="feature-icon">🧪</div>
+                        <div class="feature-text">
+                            <strong>UAT на Staging</strong>
+                            <p>Заказчик тестирует функциональность на окружении, идентичном production</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🔄</div>
+                        <div class="feature-text">
+                            <strong>Blue-Green Deployment</strong>
+                            <p>Zero-downtime deploy с мгновенным rollback при проблемах</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-text">
+                            <strong>AI Observability</strong>
+                            <p>E2E мониторинг performance, errors, user behavior в реальном времени</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="feature-icon">🔮</div>
+                        <div class="feature-text">
+                            <strong>Predictive Analysis</strong>
+                            <p>AI предсказывает потенциальные сбои до того, как они произойдут</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="result-card">
+                    <strong>Результат:</strong> Стабильный production с проактивным мониторингом и готовностью к следующим User Stories
+                </div>
+            </div>
+            <div class="phase-visual">
+                <h4 style="margin-bottom: 1.5rem; color: var(--accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">Production Metrics</h4>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">99.9%</div>
+                        <div class="stat-label">Uptime SLA</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">&lt;200ms</div>
+                        <div class="stat-label">Response time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Downtime deploys</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">&lt;5min</div>
+                        <div class="stat-label">Rollback time</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(168, 85, 247, 0.1); border-radius: 12px;">
+                    <div style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">AI Predictions (last 24h)</div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Memory spike predicted</span>
+                            <span style="color: var(--accent);">Prevented</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>DB connection pool warning</span>
+                            <span style="color: var(--accent);">Auto-scaled</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Traffic anomaly detected</span>
+                            <span style="color: var(--accent);">Monitored</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height);
+            document.getElementById('progressBar').style.transform = `scaleX(${scrolled})`;
+        });
+
+        // Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.phase-content, .phase-visual').forEach(el => {
+                        el.classList.add('visible');
+                    });
+
+                    const sections = document.querySelectorAll('.phase-section');
+                    const index = Array.from(sections).indexOf(entry.target);
+                    document.querySelectorAll('.phase-dot').forEach((dot, i) => {
+                        dot.classList.toggle('active', i === index);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.phase-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Nav clicks
+        document.querySelectorAll('.phase-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                document.querySelectorAll('.phase-section')[dot.dataset.section].scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

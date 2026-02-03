@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Development | Checklist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #0ea5e9;
+            --success: #10b981;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        .tagline {
+            color: var(--muted);
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        /* Phases */
+        .phases {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .phase-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-number {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .phase-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9375rem;
+        }
+
+        .check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--success);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--success);
+            font-size: 0.75rem;
+        }
+
+        .check::before {
+            content: '✓';
+        }
+
+        /* Next arrow */
+        .next-phase {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .next-phase::before {
+            content: '→';
+        }
+
+        /* Progress */
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 2px;
+            width: 100%;
+        }
+
+        /* Summary */
+        .summary {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(16, 185, 129, 0.1));
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .summary h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary p {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 640px) {
+            .stats {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI-Driven <span>Development</span></h1>
+            <p class="tagline">Чеклист результатов каждой фазы</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">55.8%</div>
+                <div class="stat-label">Ускорение</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">80%</div>
+                <div class="stat-label">Покрытие</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">6 мес</div>
+                <div class="stat-label">ROI</div>
+            </div>
+        </div>
+
+        <div class="phases">
+            <!-- Phase 1 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-number">🐴</div>
+                    <h3 class="phase-title">Кентавр-Аналитика</h3>
+                </div>
+                <ul class="checklist">
+                    <li><span class="check"></span>Исчерпывающий опросник</li>
+                    <li><span class="check"></span>Vision & Scope документ</li>
+                    <li><span class="check"></span>Epic User Stories</li>
+                    <li><span class="check"></span>UI прототип (mockups)</li>
+                    <li><span class="check"></span>Утверждение заказчиком</li>
+                </ul>
+                <div class="next-phase">Готово к Детализации</div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-number">2</div>
+                    <h3 class="phase-title">Детализация Требований</h3>
+                </div>
+                <ul class="checklist">
+                    <li><span class="check"></span>User Stories с Acceptance Criteria</li>
+                    <li><span class="check"></span>Given-When-Then сценарии</li>
+                    <li><span class="check"></span>Definition of Done</li>
+                    <li><span class="check"></span>Связь с UI mockups</li>
+                </ul>
+                <div class="next-phase">Готово к Разработке</div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-number">3</div>
+                    <h3 class="phase-title">Feature Branch</h3>
+                </div>
+                <ul class="checklist">
+                    <li><span class="check"></span>Feature branch создан</li>
+                    <li><span class="check"></span>Код по спецификации (Claude Code)</li>
+                    <li><span class="check"></span>Unit tests 80%+ coverage</li>
+                    <li><span class="check"></span>Playwright E2E тест для US</li>
+                    <li><span class="check"></span>Локальные тесты пройдены</li>
+                </ul>
+                <div class="next-phase">Готово к Review</div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-number">4</div>
+                    <h3 class="phase-title">Code Review & Merge</h3>
+                </div>
+                <ul class="checklist">
+                    <li><span class="check"></span>AI Pre-Review (security, quality)</li>
+                    <li><span class="check"></span>Human Review (архитектура)</li>
+                    <li><span class="check"></span>PR с описанием и ссылкой на US</li>
+                    <li><span class="check"></span>Merge в main</li>
+                </ul>
+                <div class="next-phase">Готово к CI/CD</div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-number">5</div>
+                    <h3 class="phase-title">CI/CD Тестовый Контур</h3>
+                </div>
+                <ul class="checklist">
+                    <li><span class="check"></span>Auto deploy на test env</li>
+                    <li><span class="check"></span>Build успешен</li>
+                    <li><span class="check"></span>Unit tests пройдены</li>
+                    <li><span class="check"></span>E2E regression suite пройден</li>
+                </ul>
+                <div class="next-phase">Готово к Production</div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+
+            <!-- Phase 6 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-number">6</div>
+                    <h3 class="phase-title">Production</h3>
+                </div>
+                <ul class="checklist">
+                    <li><span class="check"></span>UAT на staging пройден</li>
+                    <li><span class="check"></span>Production deployed (blue-green)</li>
+                    <li><span class="check"></span>AI Observability настроен</li>
+                    <li><span class="check"></span>Predictive monitoring активен</li>
+                </ul>
+                <div class="next-phase">User Story завершена</div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            </div>
+        </div>
+
+        <div class="summary">
+            <h3>Цикл повторяется для каждой User Story</h3>
+            <p>Итеративная разработка с гарантированным качеством</p>
+        </div>
+    </div>
+</body>
+</html>
