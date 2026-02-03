@@ -487,6 +487,35 @@
             font-weight: 700;
         }
 
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .badge-deprecated {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+            border: 1px solid rgba(248, 81, 73, 0.3);
+        }
+
+        .badge-changed {
+            background: rgba(210, 153, 34, 0.15);
+            color: #d29922;
+            border: 1px solid rgba(210, 153, 34, 0.3);
+        }
+
+        .badge-stable {
+            background: rgba(63, 185, 80, 0.15);
+            color: #3fb950;
+            border: 1px solid rgba(63, 185, 80, 0.3);
+        }
+
         /* Info boxes */
         .info-box {
             margin: 1.5rem 0;
@@ -786,6 +815,7 @@
                     <a href="#m2-3" class="nav-link">2.3 Plan Mode</a>
                     <a href="#m2-4" class="nav-link">2.4 Списки задач</a>
                     <a href="#m2-5" class="nav-link">2.5 Права и безопасность</a>
+                    <a href="#m2-6" class="nav-link">2.6 Конфигурация settings.json</a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Уровень 3: Продвинутый</div>
@@ -795,6 +825,7 @@
                     <a href="#m3-4" class="nav-link">3.4 MCP Серверы</a>
                     <a href="#m3-5" class="nav-link">3.5 Plugins</a>
                     <a href="#m3-6" class="nav-link">3.6 CI/CD интеграция</a>
+                    <a href="#m3-7" class="nav-link">3.7 Автоматизация тестирования</a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Уровень 4: Методология</div>
@@ -804,9 +835,16 @@
                     <a href="#m4-4" class="nav-link">4.4 Масштабирование</a>
                 </div>
                 <div class="nav-section">
+                    <div class="nav-section-title">Уровень 5: Расширения</div>
+                    <a href="#m5-1" class="nav-link">5.1 Agent SDK</a>
+                    <a href="#m5-2" class="nav-link">5.2 MCP серверы</a>
+                    <a href="#m5-3" class="nav-link">5.3 Продвинутые Skills</a>
+                </div>
+                <div class="nav-section">
                     <div class="nav-section-title">Практика</div>
                     <a href="#scenarios" class="nav-link">Сценарии</a>
                     <a href="#appendix" class="nav-link">Приложения</a>
+                    <a href="#appendix-e" class="nav-link" style="margin-left: 1rem;">↳ Changelog</a>
                 </div>
             </nav>
         </aside>
@@ -1615,6 +1653,110 @@ done</code></pre>
                     </div>
                 </section>
 
+                <!-- Module 2.6 -->
+                <section id="m2-6">
+                    <h3><span class="module-number">2.6</span> Конфигурация settings.json (2026)</h3>
+
+                    <p><strong>Назначение:</strong> Файл конфигурации Claude Code, определяющий поведение, разрешения, MCP серверы и другие настройки.</p>
+
+                    <h4>Отличие от CLAUDE.md</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Файл</th><th>Назначение</th><th>Формат</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>CLAUDE.md</code></td><td>Инструкции для AI (что делать)</td><td>Markdown</td></tr>
+                            <tr><td><code>settings.json</code></td><td>Конфигурация инструмента (как работать)</td><td>JSON</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Расположение файлов</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Уровень</th><th>Расположение</th><th>Когда использовать</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1. Managed</td><td>IT-политика компании</td><td>Enterprise контроль</td></tr>
+                            <tr><td>2. User</td><td><code>~/.claude/settings.json</code></td><td>Личные глобальные настройки</td></tr>
+                            <tr><td>3. Project shared</td><td><code>.claude/settings.json</code></td><td>Командные настройки (коммитить)</td></tr>
+                            <tr><td>4. Project local</td><td><code>.claude/settings.local.json</code></td><td>Локальные (НЕ коммитить)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Ключевые настройки</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Настройка</th><th>Тип</th><th>Описание</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>model</code></td><td>string</td><td>Модель: <code>sonnet</code>, <code>opus</code>, <code>haiku</code></td></tr>
+                            <tr><td><code>thinking</code></td><td>boolean</td><td>Extended thinking (рекомендуется <code>true</code>)</td></tr>
+                            <tr><td><code>plansDirectory</code></td><td>string</td><td>Директория для планов</td></tr>
+                            <tr><td><code>enableAllProjectMcpServers</code></td><td>boolean</td><td>Автовключение MCP серверов</td></tr>
+                            <tr><td><code>permissions</code></td><td>object</td><td>Allow/Ask/Deny правила</td></tr>
+                            <tr><td><code>env</code></td><td>object</td><td>Переменные окружения</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Минимальная рекомендуемая настройка</h4>
+                    <pre><code>{
+  "model": "sonnet",
+  "thinking": true
+}</code></pre>
+
+                    <blockquote>
+                        <strong>Почему <code>thinking: true</code>:</strong> Улучшает качество ответов на сложные задачи. AI "думает вслух" перед ответом — особенно полезно для архитектурных решений.
+                    </blockquote>
+
+                    <h4>Tier 1 — продвинутая конфигурация</h4>
+                    <pre><code>{
+  "plansDirectory": "./docs/plans",
+  "enableAllProjectMcpServers": true,
+  "permissions": {
+    "allow": ["Bash(npm:*)", "Bash(git:*)", "Edit(src/**)"],
+    "deny": ["Read(.env*)"]
+  },
+  "env": {
+    "ENABLE_TOOL_SEARCH": "auto:5"
+  }
+}</code></pre>
+
+                    <h4>Что даёт Tier 1</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Настройка</th><th>Эффект</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>plansDirectory: "./docs/plans"</code></td><td>Планы сохраняются в проекте (можно коммитить)</td></tr>
+                            <tr><td><code>enableAllProjectMcpServers: true</code></td><td>MCP серверы включаются без запросов</td></tr>
+                            <tr><td><code>permissions.allow</code></td><td>npm/git/редактирование — без подтверждений</td></tr>
+                            <tr><td><code>permissions.deny</code></td><td>.env файлы защищены от чтения</td></tr>
+                            <tr><td><code>ENABLE_TOOL_SEARCH: "auto:5"</code></td><td>MCP tools грузятся лениво (экономия ~90% токенов)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Переменные окружения (env)</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Переменная</th><th>Значение</th><th>Описание</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>ENABLE_TOOL_SEARCH</code></td><td><code>auto:N</code></td><td>Ленивая загрузка MCP tools</td></tr>
+                            <tr><td><code>ANTHROPIC_API_KEY</code></td><td>API ключ</td><td>Для API режима (не OAuth)</td></tr>
+                            <tr><td><code>CLAUDE_CODE_DEBUG</code></td><td><code>true</code></td><td>Отладочный вывод</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Валидация конфигурации</h4>
+                    <pre><code>claude doctor    # Проверит settings.json
+/config          # Показать текущую конфигурацию</code></pre>
+
+                    <div class="practice">
+                        <div class="practice-title">Практика</div>
+                        <p>Создать <code>.claude/settings.json</code> с Tier 1 конфигурацией, проверить через <code>claude doctor</code>.</p>
+                    </div>
+                </section>
+
                 <!-- Level 3 -->
                 <h2 id="level-3">Уровень 3: Продвинутые техники</h2>
 
@@ -1804,6 +1946,9 @@ Claude: Task abc123 (test-engineer): completed
                             <tr><td>commit</td><td><code>/commit</code></td><td>Умный коммит с анализом изменений</td></tr>
                             <tr><td>review-pr</td><td><code>/review-pr</code></td><td>Code review текущего PR</td></tr>
                             <tr><td>fix-e2e</td><td><code>/fix-e2e</code></td><td>Починка падающих E2E тестов</td></tr>
+                            <tr><td>init-project-files</td><td><code>/init-project</code></td><td>Инициализация стандартных файлов</td></tr>
+                            <tr><td>refactor-clean-code</td><td><code>/refactor</code></td><td>Рефакторинг к Clean Architecture</td></tr>
+                            <tr><td>split-html</td><td><code>/split-html</code></td><td>Разделение HTML на HTML/JS/CSS</td></tr>
                         </tbody>
                     </table>
 
@@ -1851,6 +1996,187 @@ claude mcp add --transport http github https://api.github.com/mcp/
 
 # Stdio transport (локальный процесс)
 claude mcp add supabase npx @supabase/mcp-server</code></pre>
+                </section>
+
+                <!-- Module 3.5 -->
+                <section id="m3-5">
+                    <h3><span class="module-number">3.5</span> Plugins — готовые расширения (2026)</h3>
+
+                    <p><strong>Назначение:</strong> Готовые пакеты расширений, объединяющие Skills, MCP серверы и конфигурации.</p>
+
+                    <h4>Типы плагинов</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Категория</th><th>Примеры</th><th>Что даёт</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Code Intelligence</strong></td><td>TypeScript, Python, Rust LSP</td><td>Улучшенное понимание кода</td></tr>
+                            <tr><td><strong>External Integrations</strong></td><td>Firebase, Stripe, GitHub Actions</td><td>Интеграция с сервисами</td></tr>
+                            <tr><td><strong>Development Workflows</strong></td><td>git-workflow, testing-suite</td><td>Готовые процессы</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Установка плагинов</h4>
+                    <pre><code>/plugin                    # Список доступных плагинов
+/plugin install firebase   # Установить плагин
+/plugin remove firebase    # Удалить плагин</code></pre>
+
+                    <h4>Популярные плагины</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Плагин</th><th>Возможности</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>firebase</strong></td><td>Firestore, Auth, Hosting, Functions</td></tr>
+                            <tr><td><strong>supabase-toolkit</strong></td><td>Миграции, Edge Functions, RLS</td></tr>
+                            <tr><td><strong>testing-suite</strong></td><td>Playwright E2E, Jest unit tests</td></tr>
+                            <tr><td><strong>git-workflow</strong></td><td>Git Flow, feature branches</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Module 3.6 -->
+                <section id="m3-6">
+                    <h3><span class="module-number">3.6</span> CI/CD интеграция (2026)</h3>
+
+                    <h4>Режимы использования в CI</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Режим</th><th>Флаг</th><th>Когда использовать</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Headless</td><td><code>-p "prompt"</code></td><td>Автоматизация, скрипты</td></tr>
+                            <tr><td>Non-interactive</td><td><code>--yes</code></td><td>CI без подтверждений</td></tr>
+                            <tr><td>Bypass permissions</td><td><code>--dangerously-skip-permissions</code></td><td>Только в изолированных контейнерах</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>GitHub Actions: AI Code Review</h4>
+                    <pre><code>name: AI Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Claude Code
+        run: curl -fsSL https://claude.ai/install.sh | bash
+
+      - name: AI Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "Review changes for security and quality" \
+            --dangerously-skip-permissions > review.md</code></pre>
+
+                    <h4>Best Practices для CI</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Практика</th><th>Почему важно</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Используйте bypass только в контейнерах</td><td>Безопасность</td></tr>
+                            <tr><td>Храните API ключи в secrets</td><td>Не коммитить ключи</td></tr>
+                            <tr><td>Используйте <code>--model haiku</code> для простых задач</td><td>Экономия токенов</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Module 3.7 -->
+                <section id="m3-7">
+                    <h3><span class="module-number">3.7</span> Автоматизация тестирования (2026)</h3>
+
+                    <p><strong>Playwright Testing Suite</strong> — комплексная автоматизация E2E тестирования.</p>
+
+                    <h4>Установка</h4>
+                    <pre><code>/plugin install testing-suite</code></pre>
+
+                    <h4>Playwright агенты</h4>
+                    <div class="mermaid">
+flowchart TB
+    A[User Story] --> B["Playwright Planner<br/>Планирование тестов"]
+    B --> C["Playwright Generator<br/>Генерация кода"]
+    C --> D["Test Execution"]
+    D --> E{Pass?}
+    E -->|Yes| F[Done]
+    E -->|No| G["Playwright Healer<br/>Исправление"]
+    G --> C
+                    </div>
+
+                    <h4>Playwright Planner</h4>
+                    <p><strong>Назначение:</strong> Анализ user story и создание плана тестовых сценариев.</p>
+                    <pre><code>Вы: Спланируй E2E тесты для формы регистрации
+
+Claude: ## Тест-план: Форма регистрации
+
+### Сценарий 1: Успешная регистрация
+1. Открыть /register
+2. Заполнить валидные данные
+3. Нажать "Зарегистрироваться"
+4. Проверить редирект на /dashboard
+
+### Сценарий 2: Валидация email
+...</code></pre>
+
+                    <h4>Playwright Generator</h4>
+                    <p><strong>Назначение:</strong> Автоматическая генерация тестового кода.</p>
+                    <pre><code>// tests/registration.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('successful registration', async ({ page }) => {
+  await page.goto('/register');
+  await page.getByLabel('Email').fill('user@example.com');
+  await page.getByLabel('Password').fill('SecurePass123!');
+  await page.getByRole('button', { name: 'Register' }).click();
+  await expect(page).toHaveURL('/dashboard');
+});</code></pre>
+
+                    <h4>Playwright Healer</h4>
+                    <p><strong>Назначение:</strong> Автоматическое исправление падающих тестов.</p>
+                    <pre><code>Вы: Тест падает с ошибкой:
+    "Locator: getByRole('button', { name: 'Register' })"
+
+Claude: Анализ: Кнопка переименована в "Sign Up".
+
+        Исправление:
+        - getByRole('button', { name: 'Register' })
+        + getByRole('button', { name: 'Sign Up' })
+
+        ✅ Тест исправлен и прошёл.</code></pre>
+
+                    <h4>Skill /fix-e2e</h4>
+                    <p>Встроенный skill для автоматической починки E2E тестов:</p>
+                    <pre><code>/fix-e2e
+
+Claude: Анализирую E2E тесты...
+        Найдено падающих: 3
+        ✅ Все исправлены
+        47/47 тестов прошли</code></pre>
+
+                    <h4>Ручное тестирование с Playwright</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Действие</th><th>Инструмент</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Навигация</td><td><code>browser_navigate</code></td></tr>
+                            <tr><td>Клик</td><td><code>browser_click</code></td></tr>
+                            <tr><td>Ввод текста</td><td><code>browser_type</code></td></tr>
+                            <tr><td>Скриншот</td><td><code>browser_take_screenshot</code></td></tr>
+                            <tr><td>Snapshot (a11y)</td><td><code>browser_snapshot</code></td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="practice">
+                        <div class="practice-title">Практика</div>
+                        <p>Установить testing-suite плагин, сгенерировать тесты для формы, использовать <code>/fix-e2e</code>.</p>
+                    </div>
                 </section>
 
                 <!-- Level 4 -->
@@ -2027,6 +2353,196 @@ flowchart TB
                     </div>
                 </section>
 
+                <!-- Level 5 -->
+                <h2 id="level-5">Уровень 5: Разработка расширений</h2>
+
+                <!-- Module 5.1 -->
+                <section id="m5-1">
+                    <h3><span class="module-number">5.1</span> Agent SDK — создание агентов (2026)</h3>
+
+                    <p><strong>Назначение:</strong> Программный интерфейс для создания кастомных AI агентов на базе Claude.</p>
+
+                    <h4>Установка</h4>
+                    <pre><code># TypeScript/JavaScript
+npm install @anthropic-ai/agent-sdk
+
+# Python
+pip install anthropic-agent-sdk</code></pre>
+
+                    <h4>Базовый пример: Task Agent</h4>
+                    <pre><code>import { Agent } from '@anthropic-ai/agent-sdk';
+
+const agent = new Agent({
+  name: 'code-assistant',
+  model: 'claude-sonnet-4-5-20250514',
+  tools: ['Read', 'Write', 'Edit', 'Bash'],
+  systemPrompt: `You are a helpful code assistant.`
+});
+
+// Запуск с выводом в файл
+const task = await agent.run({
+  prompt: 'Create Express.js server with /health endpoint',
+  outputFile: './agent-output.txt'
+});
+
+console.log('Result:', task.result);</code></pre>
+
+                    <h4>Конфигурация агента</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Параметр</th><th>Описание</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>name</code></td><td>Имя агента (для логов)</td></tr>
+                            <tr><td><code>model</code></td><td>Модель Claude</td></tr>
+                            <tr><td><code>tools</code></td><td>Разрешённые инструменты</td></tr>
+                            <tr><td><code>systemPrompt</code></td><td>Системный промпт</td></tr>
+                            <tr><td><code>maxTurns</code></td><td>Максимум итераций</td></tr>
+                            <tr><td><code>outputFile</code></td><td>Файл для вывода</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Многоагентная оркестрация</h4>
+                    <pre><code>const planner = new Agent({ name: 'planner', tools: ['Read', 'Glob'] });
+const coder = new Agent({ name: 'coder', tools: ['Read', 'Write', 'Edit'] });
+const reviewer = new Agent({ name: 'reviewer', tools: ['Read', 'Grep'] });
+
+const orchestrator = new Orchestrator([planner, coder, reviewer]);
+
+const result = await orchestrator.run({
+  task: 'Add user authentication',
+  workflow: [
+    { agent: 'planner', output: 'plan.md' },
+    { agent: 'coder', input: 'plan.md' },
+    { agent: 'reviewer', output: 'review.md' }
+  ]
+});</code></pre>
+
+                    <div class="practice">
+                        <div class="practice-title">Практика</div>
+                        <p>Создать агента для анализа кодовой базы с выводом результата в файл.</p>
+                    </div>
+                </section>
+
+                <!-- Module 5.2 -->
+                <section id="m5-2">
+                    <h3><span class="module-number">5.2</span> Создание MCP серверов (2026)</h3>
+
+                    <h4>Архитектура</h4>
+                    <div class="mermaid">
+flowchart LR
+    A[Claude Code] <-->|JSON-RPC| B[MCP Server]
+    B <--> C[External API]
+    B <--> D[Database]
+                    </div>
+
+                    <h4>Базовая структура</h4>
+                    <pre><code>import { Server } from '@modelcontextprotocol/sdk/server';
+
+const server = new Server({
+  name: 'my-company-api',
+  version: '1.0.0',
+});
+
+// Определение инструмента
+server.tool({
+  name: 'get_employee',
+  description: 'Get employee info by ID',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      employeeId: { type: 'string' }
+    },
+    required: ['employeeId']
+  },
+  handler: async ({ employeeId }) => {
+    const employee = await fetchFromAPI(`/employees/${employeeId}`);
+    return {
+      content: [{ type: 'text', text: JSON.stringify(employee) }]
+    };
+  }
+});
+
+server.listen();</code></pre>
+
+                    <h4>Подключение кастомного MCP</h4>
+                    <pre><code>// .claude/settings.json
+{
+  "mcpServers": {
+    "company-api": {
+      "command": "node",
+      "args": ["./mcp-servers/company-api/index.js"],
+      "env": {
+        "API_TOKEN": "${COMPANY_API_TOKEN}"
+      }
+    }
+  }
+}</code></pre>
+
+                    <h4>Best Practices</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Практика</th><th>Почему важно</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Валидируйте входные данные</td><td>Безопасность</td></tr>
+                            <tr><td>Логируйте запросы</td><td>Аудит и отладка</td></tr>
+                            <tr><td>Используйте env для секретов</td><td>Не хардкодить токены</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Module 5.3 -->
+                <section id="m5-3">
+                    <h3><span class="module-number">5.3</span> Продвинутые Skills (2026)</h3>
+
+                    <h4>Структура сложного Skill</h4>
+                    <pre><code>---
+name: full-feature-workflow
+description: Полный цикл реализации фичи
+tools: Read, Write, Edit, Bash, Task
+---
+
+# Full Feature Workflow
+
+## Этапы
+
+### 1. Анализ
+1. Прочитать User Story
+2. Идентифицировать файлы
+3. Создать план
+
+### 2. Реализация
+1. Создать feature branch
+2. Реализовать код
+3. Запустить линтер
+
+### 3. Тестирование
+1. Unit tests (coverage >80%)
+2. E2E test по AC
+
+### 4. Финализация
+1. Создать коммит
+2. Создать PR</code></pre>
+
+                    <h4>Организация Skills</h4>
+                    <pre><code>.claude/skills/
+├── common/
+│   ├── commit/SKILL.md
+│   └── pr/SKILL.md
+├── frontend/
+│   └── component/SKILL.md
+├── backend/
+│   └── api-endpoint/SKILL.md
+└── devops/
+    └── deploy-staging/SKILL.md</code></pre>
+
+                    <div class="practice">
+                        <div class="practice-title">Практика</div>
+                        <p>Создать skill для полного цикла реализации фичи в вашем проекте.</p>
+                    </div>
+                </section>
+
                 <!-- Scenarios -->
                 <h2 id="scenarios">Практические сценарии</h2>
 
@@ -2079,6 +2595,134 @@ Claude: Проблема в файле src/services/OrderService.ts:142
 Claude: [Создаёт branch, применяет fix, пишет тест]</code></pre>
                 </section>
 
+                <section>
+                    <h3>Сценарий D: Рефакторинг с сохранением поведения</h3>
+                    <div class="mermaid">
+flowchart TB
+    A[God Object<br/>2000 строк] --> B[Анализ зависимостей]
+    B --> C[Characterization tests]
+    C --> D["Разбиение на модули"]
+    D --> E[Запуск тестов<br/>после каждого шага]
+    E --> F["✅ Чистая архитектура"]
+                    </div>
+
+                    <h4>Пример диалога</h4>
+                    <pre><code>Вы: UserService.ts слишком большой (2000 строк).
+    Проанализируй и предложи план разбиения.
+
+Claude: Анализирую... Предлагаю разделить на:
+        - UserAuthService (аутентификация)
+        - UserProfileService (профиль)
+        - UserNotificationService (уведомления)
+
+Вы: Перед рефакторингом напиши characterization tests
+
+Claude: [Пишет тесты, покрывающие все публичные методы]
+
+Вы: Теперь разбивай по плану. После каждого шага — тесты.
+
+Claude: [Пошагово разбивает, проверяет тесты]</code></pre>
+                </section>
+
+                <section>
+                    <h3>Сценарий E: Прототипирование по User Story</h3>
+
+                    <h4>User Story</h4>
+                    <pre><code>Как пользователь, я хочу фильтровать товары по категории,
+цене и рейтингу, чтобы быстрее находить нужные товары.
+
+AC:
+- Фильтр по категориям (чекбоксы)
+- Фильтр по цене (ползунок от-до)
+- Фильтр по рейтингу (звёзды 1-5)
+- Кнопка "Сбросить фильтры"
+- Применение без перезагрузки</code></pre>
+
+                    <h4>Генерация прототипа</h4>
+                    <pre><code>Вы: Создай интерактивный HTML прототип для этой User Story.
+    Данные товаров захардкодь (10-15 товаров).
+
+Claude: [Создаёт HTML файл]
+        - Боковая панель с фильтрами
+        - Сетка товаров
+        - Живая фильтрация через JS
+        Файл: prototype-filters.html
+
+Вы: Открой и проверь все AC
+
+Claude: [browser_navigate → localhost]
+        ✅ Все AC выполнены</code></pre>
+                </section>
+
+                <section>
+                    <h3>Сценарий F: Автоматизация тестирования</h3>
+                    <div class="mermaid">
+flowchart TB
+    A[User Story] --> B["Playwright Planner<br/>Тест-план"]
+    B --> C["Playwright Generator<br/>Код тестов"]
+    C --> D["Запуск тестов"]
+    D --> E{Pass?}
+    E -->|Да| F["✅ Done"]
+    E -->|Нет| G["Playwright Healer"]
+    G --> C
+                    </div>
+
+                    <h4>Пример workflow</h4>
+                    <pre><code>Вы: Спланируй E2E тесты для checkout flow
+
+Claude: [Playwright Planner]
+        ## Тест-план: Checkout
+        1. Happy path (корзина → оплата → confirmation)
+        2. Валидация (пустые поля, невалидный email)
+        3. Ошибки оплаты (отклонённая карта)
+
+Вы: Сгенерируй тесты
+
+Claude: [Playwright Generator]
+        Создано: 12 тестов, 3 Page Objects
+
+Вы: Запусти тесты
+
+Claude: ✅ 10 passed, ❌ 2 failed
+
+Вы: /fix-e2e
+
+Claude: Анализирую... Исправлено 2 теста.
+        ✅ 12/12 passed</code></pre>
+                </section>
+
+                <section>
+                    <h3>Сценарий G: Ручное тестирование с Playwright</h3>
+
+                    <h4>Исследовательское тестирование</h4>
+                    <pre><code>Вы: Открой http://127.0.0.1:3000/admin/users
+
+Claude: [browser_navigate]
+        Вижу таблицу пользователей и кнопку "Add User".
+
+Вы: Нажми Add User и опиши форму
+
+Claude: [browser_click]
+        Модалка с полями: Email, Name, Role, Status
+        Кнопки: Cancel, Create
+
+Вы: Попробуй создать пользователя с невалидным email
+
+Claude: [Заполняет "not-an-email", нажимает Create]
+        Результат: "Please enter a valid email"
+        ✅ Валидация работает
+
+Вы: Создай валидного пользователя
+
+Claude: [Заполняет валидные данные]
+        ✅ Пользователь появился в таблице
+
+Вы: Сделай скриншот
+
+Claude: [browser_take_screenshot]
+        Сохранён: screenshot-users-table.png</code></pre>
+                </section>
+
                 <!-- Appendix -->
                 <h2 id="appendix">Приложения</h2>
 
@@ -2120,6 +2764,16 @@ Claude: [Создаёт branch, применяет fix, пишет тест]</co
                         <li>Знаю human oversight точки</li>
                         <li>Эффективно работаю с legacy</li>
                         <li>Масштабирую практики на команду</li>
+                    </ul>
+
+                    <h4>Уровень 5 (Extension Developer)</h4>
+                    <ul class="checklist">
+                        <li>Создаю приложения с Agent SDK</li>
+                        <li>Разрабатываю MCP серверы</li>
+                        <li>Пишу продвинутые Skills с интеграциями</li>
+                        <li>Настроил Playwright Testing Suite</li>
+                        <li>Использую Playwright агентов</li>
+                        <li>Создаю прототипы по User Stories</li>
                     </ul>
                 </section>
 
@@ -2163,13 +2817,107 @@ Claude: [Создаёт branch, применяет fix, пишет тест]</co
                             <tr><td><strong>Контекст-инженер</strong></td><td>Специалист, управляющий AI для решения задач</td></tr>
                             <tr><td><strong>Кентавр</strong></td><td>Методология человек+AI, где каждый делает своё лучше</td></tr>
                             <tr><td><strong>CLAUDE.md</strong></td><td>Файл с инструкциями для AI в контексте проекта</td></tr>
+                            <tr><td><strong>settings.json</strong></td><td>Файл конфигурации инструментов (permissions, MCP, env)</td></tr>
                             <tr><td><strong>Skill</strong></td><td>Переиспользуемый workflow</td></tr>
                             <tr><td><strong>Hook</strong></td><td>Скрипт, выполняемый при событии</td></tr>
                             <tr><td><strong>MCP</strong></td><td>Model Context Protocol — протокол интеграций</td></tr>
                             <tr><td><strong>Субагент</strong></td><td>Специализированный AI с изолированным контекстом</td></tr>
+                            <tr><td><strong>Agent SDK</strong></td><td>Библиотека для создания AI агентов</td></tr>
                             <tr><td><strong>Checkpoint</strong></td><td>Точка восстановления (Esc Esc)</td></tr>
+                            <tr><td><strong>Plugin</strong></td><td>Комплексное расширение (skills + MCP)</td></tr>
+                            <tr><td><strong>Playwright Testing Suite</strong></td><td>Плагин автотестирования через браузер</td></tr>
+                            <tr><td><strong>ENABLE_TOOL_SEARCH</strong></td><td>Ленивая загрузка MCP инструментов</td></tr>
                         </tbody>
                     </table>
+                </section>
+
+                <section id="appendix-e">
+                    <h3>История изменений и устаревшие функции</h3>
+
+                    <h4>Устаревшие функции (Deprecated)</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Функция</th><th>Статус</th><th>Замена</th><th>Примечание</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ultrathink</code></td>
+                                <td><span class="badge badge-deprecated">deprecated</span></td>
+                                <td><code>thinking: true</code> в settings.json</td>
+                                <td>Убрано в 2.1.x</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm install -g @anthropic-ai/claude-code</code></td>
+                                <td><span class="badge badge-deprecated">deprecated</span></td>
+                                <td>Native installer</td>
+                                <td>npm установка больше не поддерживается</td>
+                            </tr>
+                            <tr>
+                                <td><code>claude install-github-app</code></td>
+                                <td><span class="badge badge-changed">changed</span></td>
+                                <td><code>/github</code></td>
+                                <td>Интеграция через slash команду</td>
+                            </tr>
+                            <tr>
+                                <td><code>CLAUDE_CODE_USE_BEDROCK</code></td>
+                                <td><span class="badge badge-stable">stable</span></td>
+                                <td>—</td>
+                                <td>AWS Bedrock поддержка сохранена</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Changelog по версиям</h4>
+
+                    <h5>2.1.x (Январь 2026 — текущая)</h5>
+                    <ul>
+                        <li>✅ Ленивая загрузка MCP инструментов (<code>ENABLE_TOOL_SEARCH</code>)</li>
+                        <li>✅ Плагины как пакеты инструментов</li>
+                        <li>✅ <code>plansDirectory</code> для версионирования планов</li>
+                        <li>✅ Улучшенная интеграция с GitHub через <code>/github</code></li>
+                        <li>✅ Поддержка Playwright Testing Suite</li>
+                        <li>⚠️ Удалён ultrathink режим</li>
+                    </ul>
+
+                    <h5>2.0.x (Ноябрь-Декабрь 2025)</h5>
+                    <ul>
+                        <li>✅ MCP Server поддержка</li>
+                        <li>✅ Hooks система</li>
+                        <li>✅ Skills (переиспользуемые workflows)</li>
+                        <li>✅ Agent SDK (beta)</li>
+                        <li>✅ Субагенты через Task tool</li>
+                    </ul>
+
+                    <h4>Матрица совместимости</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Функция</th><th>2.0.x</th><th>2.1.x</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>npm install</td><td>✅</td><td>❌</td></tr>
+                            <tr><td>Native install</td><td>✅</td><td>✅</td></tr>
+                            <tr><td>ultrathink</td><td>✅</td><td>❌</td></tr>
+                            <tr><td>thinking mode</td><td>✅</td><td>✅</td></tr>
+                            <tr><td>MCP</td><td>✅</td><td>✅</td></tr>
+                            <tr><td>Plugins</td><td>❌</td><td>✅</td></tr>
+                            <tr><td>ENABLE_TOOL_SEARCH</td><td>❌</td><td>✅</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Известные проблемы</h4>
+                    <ul>
+                        <li><strong>Windows + WSL2</strong>: Иногда требуется перезапуск после установки</li>
+                        <li><strong>Большие монорепо</strong>: Рекомендуется <code>.claudeignore</code></li>
+                        <li><strong>Rate limits</strong>: При интенсивном использовании субагентов</li>
+                    </ul>
+
+                    <h4>Roadmap (ожидаемые функции)</h4>
+                    <ul>
+                        <li>🔮 Multi-file editing в один шаг</li>
+                        <li>🔮 Улучшенная работа с изображениями</li>
+                        <li>🔮 Team collaboration features</li>
+                        <li>🔮 Offline режим (ограниченный)</li>
+                    </ul>
                 </section>
 
                 <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted);">
@@ -2177,7 +2925,9 @@ Claude: [Создаёт branch, применяет fix, пишет тест]</co
                     <p style="margin-top: 0.5rem; font-size: 0.875rem;">
                         <a href="https://code.claude.com/docs">Claude Code Docs</a> ·
                         <a href="https://modelcontextprotocol.io">MCP</a> ·
-                        <a href="https://docs.anthropic.com">Anthropic API</a>
+                        <a href="https://docs.anthropic.com">Anthropic API</a> ·
+                        <a href="https://www.npmjs.com/package/@anthropic-ai/agent-sdk">Agent SDK</a> ·
+                        <a href="https://github.com/anthropics/mcp-playwright">Playwright MCP</a>
                     </p>
                 </footer>
             </div>
